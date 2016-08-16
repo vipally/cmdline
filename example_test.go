@@ -1,7 +1,7 @@
 package cmdline_test
 
 import (
-	"vipally.gmail.com/basic/cmdline"
+	"github.com/vipally/cmdline"
 )
 
 func ExampleCmdline() {
