@@ -4,7 +4,7 @@ import (
 	//"fmt"
 	"testing"
 
-	"vipally.gmail.com/basic/cmdline"
+	"github.com/vipally/cmdline"
 )
 
 func TestGetUsage(t *testing.T) {
