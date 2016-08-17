@@ -24,7 +24,7 @@
 		//    command copy is used to copy a file to another path
 		//
 		//  Usage:
-		//    stockshedule.exe [-c=<cover>] -d=<dst> [-n=<no>] -s=<src> [-y=<yes>]
+		//    copy.exe [-c=<cover>] -d=<dst> [-n=<no>] -s=<src> [-y=<yes>]
 		//  -c=<cover>
 		//      if cover the destnation file
 		//  -d=<dst>  required  string (default ".")
