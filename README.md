@@ -3,6 +3,13 @@
 	It extend the std flag package and improve the user interface and add nessary usage message.
 ****
 
+	Ally(vipally@gmail.com) modify from std.flag version 1.6.2
+	1. Add LogicName and Required field for every flag, and modify the flag define interface
+	2. Add Summary and Details for commond line info
+	3. Add interface GetUsage() string
+	4. Modify the Parse() logic
+****
+
 	//usage of cmdline as follow
 	func main() {
 		cmdline.Summary("command copy is used to copy a file to another path.")
