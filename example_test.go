@@ -18,13 +18,13 @@ func ExampleCmdline() {
 	cmdline.Bool("n", "no", false, false, "if auto select no when ask for cover")
 	cmdline.Parse()
 
-	//cmdline.Usage()
+	//[error] require but lack of flag -s=<src>
 	//Usage of [copy.exe]:
 	//  Summary:
 	//    command copy is used to copy a file to another path
 	//
 	//  Usage:
-	//    stockshedule.exe [-c=<cover>] -d=<dst> [-n=<no>] -s=<src> [-y=<yes>]
+	//    copy.exe [-c=<cover>] -d=<dst> [-n=<no>] -s=<src> [-y=<yes>]
 	//  -c=<cover>
 	//      if cover the destnation file
 	//  -d=<dst>  required  string (default ".")
