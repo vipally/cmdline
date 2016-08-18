@@ -524,7 +524,7 @@ func (f *FlagSet) GetUsage() string {
 			buf.WriteString("  ")
 			buf.WriteString(name)
 		}
-		if !isZeroValue(flag.DefValue) {
+		if !isZeroValue(flag, flag.DefValue) {
 			if _, ok := flag.Value.(*stringValue); ok {
 				// put quotes on the value
 				buf.WriteString(fmt.Sprintf(" (default %q)", flag.DefValue))
