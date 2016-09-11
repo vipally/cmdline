@@ -339,7 +339,7 @@ func Details(details string) {
 
 //CopyRight() set the detail info of the command, this will show on Usage()
 func CopyRight(copyright string) {
-	CommandLine.Details(copyright)
+	CommandLine.CopyRight(copyright)
 }
 
 //Summary() set the summary info of the command, this will show on Usage()
@@ -558,7 +558,10 @@ func (f *FlagSet) GetUsage() string {
 	})
 
 	if f.copyright != "" {
-		buf.WriteString(fmt.Sprintf("\n  CopyRight:\n    %s\n", f.copyright))
+		buf.WriteString(fmt.Sprintf("\n  CopyRight:\n    %s", f.copyright))
+		if f.copyright[len(f.copyright)-1] != '\n' {
+			buf.WriteRune('\n')
+		}
 	}
 
 	if f.details != "" {
