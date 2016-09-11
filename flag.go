@@ -287,8 +287,10 @@ type FlagSet struct {
 	errorHandling ErrorHandling
 	output        io.Writer // nil means stderr; use out() accessor
 
-	summary string //summary of this application
-	details string //detail use of this application
+	summary   string //summary of this application
+	copyright string //copyright of this application
+	details   string //detail use of this application
+
 }
 
 // A Flag represents the state of a flag.
@@ -325,24 +327,34 @@ func (f *FlagSet) out() io.Writer {
 	return f.output
 }
 
-//Summary() set the summary info of the commond, this will show on Usage()
+//Summary() set the summary info of the command, this will show on Usage()
 func Summary(summary string) {
 	CommandLine.Summary(summary)
 }
 
-//Summary() set the detail info of the commond, this will show on Usage()
+//Details() set the detail info of the command, this will show on Usage()
 func Details(details string) {
 	CommandLine.Details(details)
 }
 
-//Summary() set the summary info of the commond, this will show on Usage()
+//CopyRight() set the detail info of the command, this will show on Usage()
+func CopyRight(copyright string) {
+	CommandLine.Details(copyright)
+}
+
+//Summary() set the summary info of the command, this will show on Usage()
 func (f *FlagSet) Summary(summary string) {
 	f.summary = summary
 }
 
-//Summary() set the detail info of the commond, this will show on Usage()
+//Details() set the details info of the command, this will show on Usage()
 func (f *FlagSet) Details(details string) {
 	f.details = details
+}
+
+//CopyRight() set the detail info of the command, this will show on Usage()
+func (f *FlagSet) CopyRight(copyright string) {
+	f.copyright = copyright
 }
 
 // SetOutput sets the destination for usage and error messages.
@@ -544,6 +556,10 @@ func (f *FlagSet) GetUsage() string {
 		buf.WriteString(usage)
 		buf.WriteString("\n")
 	})
+
+	if f.copyright != "" {
+		buf.WriteString(fmt.Sprintf("\n  CopyRight:\n    %s\n", f.copyright))
+	}
 
 	if f.details != "" {
 		buf.WriteString(fmt.Sprintf("\n  Details:\n    %s\n", f.details))
