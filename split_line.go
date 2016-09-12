@@ -24,7 +24,7 @@ func SplitLine(s string) []string {
 			}
 		}
 		if inString%2 == 0 && isSpace(s[i]) {
-			if start == i { //escape multi sep
+			if start == i { //escape continuous space
 				start += len_sep
 			} else {
 				a[na] = s[start+escape : i-escape]
