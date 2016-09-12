@@ -2,7 +2,6 @@ package cmdline_test
 
 import (
 	"fmt"
-	//"fmt"
 	"testing"
 
 	"github.com/vipally/cmdline"
