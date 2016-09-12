@@ -9,7 +9,7 @@ import (
 )
 
 func TestSplitLine(t *testing.T) {
-	s := `ping 127.0.0.1 		 -n 	2   " --x = 5 "  	`
+	s := `ping 127.0.0.1 		 -n 	2   " --x = 5 "  	a`
 	cmd := cmdline.SplitLine(s)
 	result := []string{
 		"ping",
@@ -17,6 +17,7 @@ func TestSplitLine(t *testing.T) {
 		"-n",
 		"2",
 		" --x = 5 ",
+		"a",
 	}
 	suc := true
 	if len(cmd) == len(result) {

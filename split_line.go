@@ -32,11 +32,9 @@ func SplitLine(s string) []string {
 				start = i + len_sep
 				i += len_sep - 1
 			}
-		} /* else {
-			escape = 0
-		}*/
+		}
 	}
-	if start < len(s)-1 {
+	if start < len(s) {
 		a[na] = s[start+escape : len(s)-escape]
 	} else {
 		na--

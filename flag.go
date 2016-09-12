@@ -80,6 +80,7 @@ import (
 	"reflect"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -924,40 +925,46 @@ func (f *FlagSet) usage() {
 	}
 }
 
+func isFlagPrefix(c byte) bool {
+	return c == '-' || c == '/'
+}
+
 // parseOne parses one flag. It reports whether a flag was seen.
 func (f *FlagSet) parseOne() (bool, error) {
 	if len(f.args) == 0 {
 		return false, nil
 	}
 	s := f.args[0]
-	if len(s) == 0 || s[0] != '-' || len(s) == 1 {
+	if s == "" || s == "-" || s == "--" || s == "/" {
 		return false, nil
 	}
-	numMinuses := 1
-	if s[1] == '-' {
-		numMinuses++
-		if len(s) == 2 { // "--" terminates the flags
-			f.args = f.args[1:]
-			return false, nil
+
+	name, value := "", ""
+	if isFlagPrefix(s[0]) {
+		numMinuses := 1
+		if s[1] == '-' {
+			numMinuses++
 		}
+		ss := strings.SplitN(s[numMinuses:], "=", 2)
+		name = ss[0]
+		if len(ss) >= 2 {
+			value = ss[1]
+		} else {
+			value = ""
+		}
+
+	} else {
+		name = f.getAutoName("") //auto generate a name if not assigned a flag name
+		value = s
 	}
-	name := s[numMinuses:]
+
 	if len(name) == 0 || name[0] == '-' || name[0] == '=' {
 		return false, f.failf("[error] bad flag syntax: %s", s)
 	}
 
 	// it's a flag. does it have an argument?
 	f.args = f.args[1:]
-	hasValue := false
-	value := ""
-	for i := 1; i < len(name); i++ { // equals cannot be first
-		if name[i] == '=' {
-			value = name[i+1:]
-			hasValue = true
-			name = name[0:i]
-			break
-		}
-	}
+
 	m := f.formal
 	flag, alreadythere := m[name] // BUG
 	if !alreadythere {
@@ -969,7 +976,7 @@ func (f *FlagSet) parseOne() (bool, error) {
 	}
 
 	if fv, ok := flag.Value.(boolFlag); ok && fv.IsBoolFlag() { // special case: doesn't need an arg
-		if hasValue {
+		if value != "" {
 			if err := fv.Set(value); err != nil {
 				return false, f.failf("[error] invalid boolean value %q for -%s: %v", value, name, err)
 			}
@@ -980,12 +987,14 @@ func (f *FlagSet) parseOne() (bool, error) {
 		}
 	} else {
 		// It must have a value, which might be the next argument.
-		if !hasValue && len(f.args) > 0 {
-			// value is the next arg
-			hasValue = true
+		for len(f.args) > 0 && (value == "" || value == "=") { //consider -f = 1 ; -f= 1 ; -f =1 case
 			value, f.args = f.args[0], f.args[1:]
+			if value[0] == '=' {
+				value = value[1:]
+			}
 		}
-		if !hasValue {
+
+		if value == "" {
 			return false, f.failf("[error] flag needs an argument: -%s", name)
 		}
 		if err := flag.Value.Set(value); err != nil {
@@ -1057,6 +1066,7 @@ func (f *FlagSet) Parsed() bool {
 	return f.parsed
 }
 
+//auto genterate a name if name not assigned
 func (f *FlagSet) getAutoName(name string) string {
 	if name == "" {
 		f.auto_id++
