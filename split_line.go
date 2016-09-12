@@ -15,7 +15,7 @@ func SplitLine(s string) []string {
 	inString := 0
 	escape := 0
 	for i := 0; i+len_sep <= len(s) && na+1 < n; i++ {
-		if s[i] == '\'' || s[i] == '"' {
+		if s[i] == '\'' || s[i] == '"' { //" xxxx yyyy " case, do not include \"
 			inString++
 			escape = 1
 		} else {
