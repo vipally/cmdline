@@ -74,5 +74,5 @@ func TestNonameFlag(t *testing.T) {
 			t.Error(i, v, n_check[i])
 		}
 	}
-	fmt.Println(cmd.GetUsage())
+	//fmt.Println(cmd.GetUsage())
 }

@@ -31,6 +31,6 @@ func TestSplitLine(t *testing.T) {
 			return
 		}
 	}
-	fmt.Println(len(cmd), len(result))
+	//fmt.Println(len(cmd), len(result))
 	t.Error("SplitLine fail")
 }
