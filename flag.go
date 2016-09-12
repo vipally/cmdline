@@ -290,7 +290,7 @@ type FlagSet struct {
 	summary   string //summary of this application
 	copyright string //copyright of this application
 	details   string //detail use of this application
-
+	auto_id   int    //no-name flag uses auto_id++ as auto-name sufix
 }
 
 // A Flag represents the state of a flag.
@@ -872,6 +872,7 @@ func Duration(name string, logic_name string, value time.Duration, required bool
 // decompose the comma-separated string into the slice.
 func (f *FlagSet) Var(value Value, name string, logic_name string, required bool, usage string) {
 	// Remember the default value as a string; it won't change.
+	name = f.getAutoName(name) //auto generate a name if not assigned a flag name
 	flag := &Flag{name, usage, value, value.String(), logic_name, required}
 	_, alreadythere := f.formal[name]
 	if alreadythere {
@@ -1005,6 +1006,7 @@ func (f *FlagSet) parseOne() (bool, error) {
 func (f *FlagSet) Parse(arguments []string) error {
 	f.parsed = true
 	f.args = arguments
+	f.auto_id = 0 //reset auto_id for parse logic to generate noname flags
 	for {
 		seen, err := f.parseOne()
 		if seen {
@@ -1053,6 +1055,14 @@ func (f *FlagSet) check_require() error {
 // Parsed reports whether f.Parse has been called.
 func (f *FlagSet) Parsed() bool {
 	return f.parsed
+}
+
+func (f *FlagSet) getAutoName(name string) string {
+	if name == "" {
+		f.auto_id++
+		name = fmt.Sprintf("{noname#%d}", f.auto_id)
+	}
+	return name
 }
 
 // Parse parses the command-line flags from os.Args[1:].  Must be called
