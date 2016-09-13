@@ -7,6 +7,7 @@ import (
 	"github.com/vipally/cmdline"
 )
 
+//basic requirement test case
 func TestFlag(t *testing.T) {
 	var (
 		line = ` ping	127.0.0.1 -n = 4 --l =10 /i 5 `
@@ -42,10 +43,10 @@ func TestFlagFull(t *testing.T) {
 	var (
 		line = ` ping	 /l=2 127.0.0.1 --n	 1   ip2  -i=3 ip3 -r=	 5 -w =4 /k = 6 `
 
-		s       = []string{"", "", ""}
-		n       = []int{0, 0, 0, 0, 0, 0}
-		s_check = []string{"127.0.0.1", "ip2", "ip3"}
-		n_check = []int{1, 2, 3, 4, 5, 6}
+		s      = []string{"", "", ""}
+		n      = []int{0, 0, 0, 0, 0, 0}
+		sCheck = []string{"127.0.0.1", "ip2", "ip3"}
+		nCheck = []int{1, 2, 3, 4, 5, 6}
 	)
 
 	argv := cmdline.SplitLine(line)
@@ -62,13 +63,13 @@ func TestFlagFull(t *testing.T) {
 	flg.Parse(argv[1:])
 
 	for i, v := range s {
-		if v != s_check[i] {
-			t.Error(i, v, s_check[i])
+		if v != sCheck[i] {
+			t.Error(i, v, sCheck[i])
 		}
 	}
 	for i, v := range n {
-		if v != n_check[i] {
-			t.Error(i, v, n_check[i])
+		if v != nCheck[i] {
+			t.Error(i, v, nCheck[i])
 		}
 	}
 }
