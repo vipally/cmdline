@@ -43,7 +43,7 @@ func TestGetUsage(t *testing.T) {
 func TestNonameFlag(t *testing.T) {
 
 	var (
-		line = ` ping	 /n2=2 127.0.0.1 --n1	 1   ip2  -n3=3 ip3 -n5=	 5 -n4 =4 /n6 = 6 `
+		line = ` ping	 /l=2 127.0.0.1 --n	 1   ip2  -i=3 ip3 -r=	 5 -w =4 /k = 6 `
 
 		s       = []string{"", "", ""}
 		n       = []int{0, 0, 0, 0, 0, 0}
@@ -53,15 +53,15 @@ func TestNonameFlag(t *testing.T) {
 
 	argv := cmdline.SplitLine(line)
 	cmd := cmdline.NewFlagSet("cmdline", cmdline.PanicOnError)
-	cmd.StringVar(&s[0], "", "ip", "", true, "")
-	cmd.StringVar(&s[1], "", "ip2", "", true, "")
-	cmd.StringVar(&s[2], "", "ip3", "", true, "")
-	cmd.IntVar(&n[0], "n1", "n1", -1, true, "")
-	cmd.IntVar(&n[1], "n2", "n2", -1, true, "")
-	cmd.IntVar(&n[2], "n3", "n3", -1, true, "")
-	cmd.IntVar(&n[3], "n4", "n4", -1, true, "")
-	cmd.IntVar(&n[4], "n5", "n5", -1, true, "")
-	cmd.IntVar(&n[5], "n6", "n6", -1, true, "")
+	cmd.StringVar(&s[0], "", "ip", "", true, "ip")
+	cmd.StringVar(&s[1], "", "ip2", "", true, "ip2")
+	cmd.StringVar(&s[2], "", "ip3", "", true, "ip3")
+	cmd.IntVar(&n[0], "n", "n", -1, true, "count")
+	cmd.IntVar(&n[1], "l", "l", -1, true, "size")
+	cmd.IntVar(&n[2], "i", "i", -1, true, "TTL")
+	cmd.IntVar(&n[3], "w", "w", -1, true, "timeout")
+	cmd.IntVar(&n[4], "r", "r", -1, true, "count")
+	cmd.IntVar(&n[5], "k", "k", -1, true, "host-list")
 	cmd.Parse(argv[1:])
 
 	for i, v := range s {

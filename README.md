@@ -8,6 +8,9 @@
 	2. Add Summary and Details for command line info
 	3. Add interface GetUsage() string
 	4. Modify the Parse() logic
+	5. Add noname-flag support
+	6. Add /flag support
+	7. Fix "-flag = x" or "-flag= x" or "-flag =x" cause panic bug
 ****
 
 	//usage of cmdline as follow

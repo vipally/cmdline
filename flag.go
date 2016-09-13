@@ -4,6 +4,9 @@
 //2. Add Summary and Details for commond line info
 //3. Add interface GetUsage() string
 //4. Modify the Parse() logic
+//5. Add noname-flag support
+//6. Add /flag support
+//7. Fix "-flag = x" or "-flag= x" or "-flag =x" cause panic bug
 
 // Copyright 2009 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
@@ -80,7 +83,6 @@ import (
 	"reflect"
 	"sort"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -945,12 +947,14 @@ func (f *FlagSet) parseOne() (bool, error) {
 		if s[1] == '-' {
 			numMinuses++
 		}
-		ss := strings.SplitN(s[numMinuses:], "=", 2)
-		name = ss[0]
-		if len(ss) >= 2 {
-			value = ss[1]
-		} else {
-			value = ""
+
+		name, value = s[numMinuses:], ""
+		for i := 0; i < len(name); i++ { //split at first '='
+			if name[i] == '=' {
+				value = name[i+1:]
+				name = name[:i]
+				break
+			}
 		}
 
 	} else {
@@ -958,7 +962,7 @@ func (f *FlagSet) parseOne() (bool, error) {
 		value = s
 	}
 
-	if len(name) == 0 || name[0] == '-' || name[0] == '=' {
+	if len(name) == 0 || isFlagPrefix(name[0]) || name[0] == '=' {
 		return false, f.failf("[error] bad flag syntax: %s", s)
 	}
 
@@ -968,7 +972,7 @@ func (f *FlagSet) parseOne() (bool, error) {
 	m := f.formal
 	flag, alreadythere := m[name] // BUG
 	if !alreadythere {
-		if name == "help" || name == "h" { // special case for nice help message.
+		if name == "help" || name == "h" || name == "?" { // special case for nice help message.
 			f.usage()
 			return false, ErrHelp
 		}
@@ -987,7 +991,7 @@ func (f *FlagSet) parseOne() (bool, error) {
 		}
 	} else {
 		// It must have a value, which might be the next argument.
-		for len(f.args) > 0 && (value == "" || value == "=") { //consider -f = 1 ; -f= 1 ; -f =1 case
+		for len(f.args) > 0 && (value == "" || value == "=") { //consider "-f = 1" or "-f= 1" or "-f =1" cases
 			value, f.args = f.args[0], f.args[1:]
 			if value[0] == '=' {
 				value = value[1:]
