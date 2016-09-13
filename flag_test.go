@@ -23,7 +23,7 @@ func TestFlag(t *testing.T) {
 	flg.StringVar(&s[0], "", "", "")
 	flg.IntVar(&n[0], "n", -1, "count")
 	flg.IntVar(&n[1], "i", -1, "TTL")
-	flg.IntVar(&n[1], "l", -1, "size")
+	flg.IntVar(&n[2], "l", -1, "size")
 	flg.Parse(argv[1:])
 
 	for i, v := range s {
@@ -51,9 +51,9 @@ func TestFlagFull(t *testing.T) {
 
 	argv := cmdline.SplitLine(line)
 	flg := flag.NewFlagSet("cmdline", flag.PanicOnError)
-	flg.StringVar(&s[0], "", "", "")
-	flg.StringVar(&s[1], "", "", "")
-	flg.StringVar(&s[2], "", "", "")
+	flg.StringVar(&s[0], "", "", "ip")
+	flg.StringVar(&s[1], "", "", "ip2")
+	flg.StringVar(&s[2], "", "", "ip3")
 	flg.IntVar(&n[0], "n", -1, "count")
 	flg.IntVar(&n[1], "l", -1, "size")
 	flg.IntVar(&n[2], "i", -1, "TTL")
