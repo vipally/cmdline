@@ -2,8 +2,14 @@
 package cmdline
 
 import (
+	"os"
 	"path"
 	"strings"
+)
+
+var (
+	thisCmd    = get_cmd(os.Args[0])
+	workDir, _ = os.Getwd()
 )
 
 func format_path(s string) string {
@@ -16,4 +22,11 @@ func get_cmd(arg0 string) string {
 	d := path.Dir(cmd) + "/"
 	app := strings.TrimPrefix(cmd, d)
 	return app
+}
+
+func WorkDir() string {
+	return workDir
+}
+func Exit(code int) {
+	os.Exit(code)
 }

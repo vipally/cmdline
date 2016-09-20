@@ -83,6 +83,7 @@ import (
 	"reflect"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -332,6 +333,8 @@ func (f *FlagSet) out() io.Writer {
 
 //Summary() set the summary info of the command, this will show on Usage()
 func Summary(summary string) {
+	summary = strings.Replace(summary, "<thiscmd>", thisCmd, -1)
+
 	CommandLine.Summary(summary)
 }
 
@@ -509,13 +512,12 @@ func GetUsage() string {
 //GetUsage() return the usage string
 func (f *FlagSet) GetUsage() string {
 	buf := bytes.NewBufferString("")
-	cmd := get_cmd(os.Args[0])
-	buf.WriteString(fmt.Sprintf("Usage of [%s]:\n", cmd))
+	buf.WriteString(fmt.Sprintf("Usage of [%s]:\n", thisCmd))
 	if f.summary != "" {
 		buf.WriteString(fmt.Sprintf("  Summary:\n    %s\n\n", f.summary))
 	}
 
-	buf.WriteString(fmt.Sprintf("  Usage:\n    %s", cmd))
+	buf.WriteString(fmt.Sprintf("  Usage:\n    %s", thisCmd))
 	f.VisitAll(func(flag *Flag) {
 		_fmt := ""
 		if flag.Required {
