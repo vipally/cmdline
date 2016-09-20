@@ -30,3 +30,14 @@ func WorkDir() string {
 func Exit(code int) {
 	os.Exit(code)
 }
+
+//<version>
+//<buildtime>
+//<thiscmd>
+//replace this tag to proper string
+func ReplaceTags(s string) string {
+	s = strings.Replace(s, "<thiscmd>", thisCmd, -1)
+	s = strings.Replace(s, "<buildtime>", "", -1)
+	s = strings.Replace(s, "<version>", "", -1)
+	return s
+}

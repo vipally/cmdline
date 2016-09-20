@@ -83,7 +83,6 @@ import (
 	"reflect"
 	"sort"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -333,19 +332,17 @@ func (f *FlagSet) out() io.Writer {
 
 //Summary() set the summary info of the command, this will show on Usage()
 func Summary(summary string) {
-	summary = strings.Replace(summary, "<thiscmd>", thisCmd, -1)
-
-	CommandLine.Summary(summary)
+	CommandLine.Summary(ReplaceTags(summary))
 }
 
 //Details() set the detail info of the command, this will show on Usage()
 func Details(details string) {
-	CommandLine.Details(details)
+	CommandLine.Details(ReplaceTags(details))
 }
 
 //CopyRight() set the detail info of the command, this will show on Usage()
 func CopyRight(copyright string) {
-	CommandLine.CopyRight(copyright)
+	CommandLine.CopyRight(ReplaceTags(copyright))
 }
 
 //Summary() set the summary info of the command, this will show on Usage()

@@ -15,8 +15,8 @@
 
 	//usage of cmdline as follow
 	func main() {
-		cmdline.Summary("command copy is used to copy a file to another path.")
-		cmdline.Details(`Command copy is used to copy a file to another path.
+		cmdline.Summary("command <thiscmd> is used to copy a file to another path.")
+		cmdline.Details(`Command <thiscmd> is used to copy a file to another path.
 	    If the destnation file is exist, default ask for if will cover it.
 	    If flag -y used, it will cover the destnation file without ask.
 	    If flag -n used, it will not cover the destnation file without ask.
