@@ -332,32 +332,32 @@ func (f *FlagSet) out() io.Writer {
 
 //Summary() set the summary info of the command, this will show on Usage()
 func Summary(summary string) {
-	CommandLine.Summary(ReplaceTags(summary))
+	CommandLine.Summary(summary)
 }
 
 //Details() set the detail info of the command, this will show on Usage()
 func Details(details string) {
-	CommandLine.Details(ReplaceTags(details))
+	CommandLine.Details(details)
 }
 
 //CopyRight() set the detail info of the command, this will show on Usage()
 func CopyRight(copyright string) {
-	CommandLine.CopyRight(ReplaceTags(copyright))
+	CommandLine.CopyRight(copyright)
 }
 
 //Summary() set the summary info of the command, this will show on Usage()
 func (f *FlagSet) Summary(summary string) {
-	f.summary = summary
+	f.summary = ReplaceTags(summary)
 }
 
 //Details() set the details info of the command, this will show on Usage()
 func (f *FlagSet) Details(details string) {
-	f.details = details
+	f.details = ReplaceTags(details)
 }
 
 //CopyRight() set the detail info of the command, this will show on Usage()
 func (f *FlagSet) CopyRight(copyright string) {
-	f.copyright = copyright
+	f.copyright = ReplaceTags(copyright)
 }
 
 // SetOutput sets the destination for usage and error messages.
@@ -509,7 +509,7 @@ func GetUsage() string {
 //GetUsage() return the usage string
 func (f *FlagSet) GetUsage() string {
 	buf := bytes.NewBufferString("")
-	buf.WriteString(fmt.Sprintf("Usage of [%s]:\n", thisCmd))
+	buf.WriteString(fmt.Sprintf("Usage of ([%s] Build %s):\n", thisCmd, BuildTime()))
 	if f.summary != "" {
 		buf.WriteString(fmt.Sprintf("  Summary:\n    %s\n\n", f.summary))
 	}
