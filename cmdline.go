@@ -14,8 +14,7 @@ var (
 )
 
 func format_path(s string) string {
-	ss := strings.Replace(s, "\\", "/", -1)
-	return ss
+	return path.Clean(s)
 }
 
 func get_cmd(arg0 string) string {
@@ -34,8 +33,9 @@ func Exit(code int) {
 	os.Exit(code)
 }
 
-func Version(v string) {
-	version = v
+func Version(v string) (old string) {
+	old, version = version, v
+	return
 }
 
 //<version>
