@@ -1,4 +1,4 @@
-# cmdline
+# cmdline [![GoDoc](https://godoc.org/github.com/vipally/cmdline?status.svg)](https://godoc.org/github.com/vipally/cmdline) ![Version](https://img.shields.io/badge/version-1.2.0-green.svg)
 	cmdline is a Golang package based on std.flag.
 	It extend the std flag package and improve the user interface and add nessary usage message.
 ****
