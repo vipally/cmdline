@@ -10,7 +10,7 @@ import (
 var (
 	thisCmd    = get_cmd(os.Args[0])
 	workDir, _ = os.Getwd()
-	version    = "0.0.1"
+	version    = "unknown"
 )
 
 func format_path(s string) string {
