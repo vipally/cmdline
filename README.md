@@ -1,20 +1,29 @@
 # cmdline [![GoDoc](https://godoc.org/github.com/vipally/cmdline?status.svg)](https://godoc.org/github.com/vipally/cmdline) ![Version](https://img.shields.io/badge/version-1.8.0-green.svg)
 	cmdline is a Golang package based on std.flag.
-	It extend the std flag package and improve the user interface and add nessary usage message.
+	It extends the std.flag package and improve the user interface and add nessary usage message.
 ****
+	CopyRight 2016 @Ally Dale. All rights reserved.
+    Author  : Ally Dale(vipally@gmail.com)
+    Blog    : http://blog.csdn.net/vipally
+    Site    : https://github.com/vipally
+****
+## change list
 
-	Ally(vipally@gmail.com) modify from std.flag version 1.7
+	Ally Dale(vipally@gmail.com) modify from std.flag version 1.7
+	Main change list from std.flag:
 	1. Add LogicName and Required field for every flag, and modify the flag define interface
-	2. Add Summary and Details for command line info
-	3. Add interface GetUsage() string
-	4. Modify the Parse() logic
-	5. Add noname-flag support
-	6. Add /flag support
-	7. Fix "-flag = x" or "-flag= x" or "-flag =x" cause panic bug
-	8. Add synonyms support for flags
+	2. Add Summary and Details and Version infor commond line info
+	3. Add <thiscmd> <build> <version> labels for Summary and Details to get runtime info
+	4. Add interface GetUsage() string
+	5. Modify the Parse() logic
+	6. Add noname-flag support
+	7. Add /flag support
+	8. Fix "-flag = x" or "-flag= x" or "-flag =x" cause panic bug
+	9. Add synonyms support for with-name flags
+
 ****
 
-### usage of package cmdline
+## usage of package cmdline
 	
 	cmdline.Version("1.0.2")
 	cmdline.Summary("<thiscmd> is an example of cmdline package usage.")

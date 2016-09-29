@@ -1,13 +1,6 @@
 //2016-08-16
 //Ally(vipally@gmail.com) modify from std.flag version 1.7
-//1. Add LogicName and Required field for every flag, and modify the flag define interface
-//2. Add Summary and Details for commond line info
-//3. Add interface GetUsage() string
-//4. Modify the Parse() logic
-//5. Add noname-flag support
-//6. Add /flag support
-//7. Fix "-flag = x" or "-flag= x" or "-flag =x" cause panic bug
-//8. Add synonyms support for flags
+//change list see cmdline.go
 
 // Copyright 2009 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
@@ -73,6 +66,7 @@
 	flag set.
 */
 //package cmdline support a friendly command line interface based on flag
+
 package cmdline
 
 import (
