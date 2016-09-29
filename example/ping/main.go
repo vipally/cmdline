@@ -1,4 +1,4 @@
-//this example shows main feature of cmdline features.
+//this example shows main features of package cmdline.
 package main
 
 import (
@@ -20,9 +20,9 @@ func main() {
     <thiscmd> is an example usage of github.com/vipally/cmdline package.`)
 	cmdline.CopyRight("no copyright defined")
 
-	//noname flag and require ones
+	//no-name flag and required ones
 	cmdline.StringVar(&host, "", "host", "", true, "host ip or name")
-	host2 := cmdline.String("", "host2", "", true, "second host ip or name")
+	host2 := cmdline.String("", "host2", "", false, "second host ip or name")
 
 	cmdline.BoolVar(&v4, "4", "v4", v4, false, "ipv4")
 
@@ -47,7 +47,7 @@ func main() {
 	//    ping is an example of cmdline package usage.
 	//
 	//  Usage:
-	//    ping [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> <host2>
+	//    ping [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> [<host2>]
 	//  -4=<v4>       ipv4
 	//  -c|count=<count>  int
 	//      count

@@ -1,5 +1,5 @@
 # cmdline [![GoDoc](https://godoc.org/github.com/vipally/cmdline?status.svg)](https://godoc.org/github.com/vipally/cmdline) ![Version](https://img.shields.io/badge/version-1.8.0-green.svg)
-	cmdline is a Golang package based on std.flag.
+	Package cmdline extends std.flag to support more useful features.
 	It extends the std.flag package and improve the user interface and add nessary usage message.
 ****
 	CopyRight 2016 @Ally Dale. All rights reserved.
@@ -43,9 +43,9 @@
         <thiscmd> is an example usage of github.com/vipally/cmdline package.`)
         cmdline.CopyRight("no copyright defined")
         
-        //noname flag and require ones
+        //no-name flag and required ones
         cmdline.StringVar(&host, "", "host", "", true, "host ip or name")
-        host2 := cmdline.String("", "host2", "", true, "second host ip or name")
+        host2 := cmdline.String("", "host2", "", false, "second host ip or name")
         
         cmdline.BoolVar(&v4, "4", "v4", v4, false, "ipv4")
         
@@ -70,7 +70,7 @@
         //    ping is an example of cmdline package usage.
         //
         //  Usage:
-        //    ping [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> <host2>
+        //    ping [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> [<host2>]
         //  -4=<v4>       ipv4
         //  -c|count=<count>  int
         //      count
