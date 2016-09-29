@@ -42,7 +42,7 @@ func main() {
 	//cmd example: ping -t=20 /4 127.0.0.1 --count =4 localhost -ttl= 5
 	//output:
 	//host:127.0.0.1 host2:localhost v4:true ttl:5 count:4
-	//Usage of ([ping] Build [Sep 29 2016 23:50:04]):
+	//Usage of ([ping] Build [Sep 30 2016 00:50:14]):
 	//  Summary:
 	//    ping is an example of cmdline package usage.
 	//
@@ -54,13 +54,13 @@ func main() {
 	//  -t|ttl=<ttl>  int
 	//      ttl
 	//  <host>  required  string      host ip or name
-	//  <host2>  required  string     second host ip or name
+	//  <host2>  string       second host ip or name
 	//
 	//  CopyRight:
 	//    no copyright defined
 	//
 	//  Details:
 	//    Version   :1.0.2
-	//    BulidTime :[Sep 29 2016 23:50:04]
+	//    BulidTime :[Sep 30 2016 00:50:14]
 	//    ping is an example usage of github.com/vipally/cmdline package.
 }
