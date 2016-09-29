@@ -7,6 +7,7 @@
 //5. Add noname-flag support
 //6. Add /flag support
 //7. Fix "-flag = x" or "-flag= x" or "-flag =x" cause panic bug
+//8. Add synonyms support for flags
 
 // Copyright 2009 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
@@ -83,7 +84,12 @@ import (
 	"reflect"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
+)
+
+const (
+	gNoNamePrefix = "{noname#"
 )
 
 // ErrHelp is the error returned if the -help or -h flag is invoked
@@ -298,21 +304,41 @@ type FlagSet struct {
 
 // A Flag represents the state of a flag.
 type Flag struct {
-	Name     string // name as it appears on command line
+	Name     string // name as it appears on command line(instead by Synonyms )
 	Usage    string // help message
 	Value    Value  // value as set
 	DefValue string // default value (as text); for usage message
 
-	LogicName string //logic name of this flag
-	Required  bool   //if this flag is force required
+	LogicName string   //logic name of this flag
+	Required  bool     //if this flag is force required
+	Synonyms  []string //flags with different name(eg:-f/-flag) maybe the same ones, so they are Synonyms
+	Visitor   string   //name of what Synonyms is visiting this flag
+}
+
+func (f *Flag) GetNameShow() (r string) {
+	if !strings.HasPrefix(f.Name, gNoNamePrefix) {
+		r = fmt.Sprintf("-%s=", f.GetSynonyms())
+	}
+	return
+}
+
+//get GetSynonyms of this flag
+func (f *Flag) GetSynonyms() string {
+	var b bytes.Buffer
+	for _, v := range f.Synonyms {
+		b.WriteString(v)
+		b.WriteByte('|')
+	}
+	b.Truncate(b.Len() - 1) //remove last '|'
+	return b.String()
 }
 
 // sortFlags returns the flags as a slice in lexicographical sorted order.
-func sortFlags(flags map[string]*Flag) []*Flag {
+func sortFlags(flags map[string]*Flag) ([]*Flag, []string) {
 	list := make(sort.StringSlice, len(flags))
 	i := 0
-	for _, f := range flags {
-		list[i] = f.Name
+	for name, _ := range flags {
+		list[i] = name
 		i++
 	}
 	list.Sort()
@@ -320,7 +346,7 @@ func sortFlags(flags map[string]*Flag) []*Flag {
 	for i, name := range list {
 		result[i] = flags[name]
 	}
-	return result
+	return result, list
 }
 
 func (f *FlagSet) out() io.Writer {
@@ -369,7 +395,9 @@ func (f *FlagSet) SetOutput(output io.Writer) {
 // VisitAll visits the flags in lexicographical order, calling fn for each.
 // It visits all flags, even those not set.
 func (f *FlagSet) VisitAll(fn func(*Flag)) {
-	for _, flag := range sortFlags(f.formal) {
+	list, names := sortFlags(f.formal)
+	for i, flag := range list {
+		flag.Visitor = names[i]
 		fn(flag)
 	}
 }
@@ -383,7 +411,9 @@ func VisitAll(fn func(*Flag)) {
 // Visit visits the flags in lexicographical order, calling fn for each.
 // It visits only those flags that have been set.
 func (f *FlagSet) Visit(fn func(*Flag)) {
-	for _, flag := range sortFlags(f.actual) {
+	list, names := sortFlags(f.actual)
+	for i, flag := range list {
+		flag.Visitor = names[i]
 		fn(flag)
 	}
 }
@@ -516,19 +546,27 @@ func (f *FlagSet) GetUsage() string {
 
 	buf.WriteString(fmt.Sprintf("  Usage:\n    %s", thisCmd))
 	f.VisitAll(func(flag *Flag) {
+		if flag.Visitor != flag.Synonyms[0] { //Synonyms show at the first one only
+			return
+		}
+
 		_fmt := ""
 		if flag.Required {
-			_fmt = " -%s=<%s>"
+			_fmt = " %s<%s>"
 		} else {
-			_fmt = " [-%s=<%s>]"
+			_fmt = " [%s<%s>]"
 		}
-		s := fmt.Sprintf(_fmt, flag.Name, flag.LogicName)
+		s := fmt.Sprintf(_fmt, flag.GetNameShow(), flag.LogicName)
 		buf.WriteString(s)
 	})
 	buf.WriteString("\n")
 
 	f.VisitAll(func(flag *Flag) {
-		s := fmt.Sprintf("  -%s=<%s>", flag.Name, flag.LogicName) // Two spaces before -; see next two comments.
+		if flag.Visitor != flag.Synonyms[0] { //Synonyms show at the first one only
+			return
+		}
+
+		s := fmt.Sprintf("  %s<%s>", flag.GetNameShow(), flag.LogicName) // Two spaces before -; see next two comments.
 		buf.WriteString(s)
 		if flag.Required {
 			buf.WriteString("  required")
@@ -866,6 +904,14 @@ func Duration(name string, logic_name string, value time.Duration, required bool
 	return CommandLine.Duration(name, logic_name, value, required, usage)
 }
 
+func getValuePtr(value Value) (r uintptr) {
+	v := reflect.ValueOf(value)
+	if v.Kind() == reflect.Ptr {
+		r = v.Pointer()
+	}
+	return
+}
+
 // Var defines a flag with the specified name and usage string. The type and
 // value of the flag are represented by the first argument, of type Value, which
 // typically holds a user-defined implementation of Value. For instance, the
@@ -875,7 +921,20 @@ func Duration(name string, logic_name string, value time.Duration, required bool
 func (f *FlagSet) Var(value Value, name string, logic_name string, required bool, usage string) {
 	// Remember the default value as a string; it won't change.
 	name = f.getAutoName(name) //auto generate a name if not assigned a flag name
-	flag := &Flag{name, usage, value, value.String(), logic_name, required}
+	var flag *Flag
+	if !strings.HasPrefix(name, gNoNamePrefix) { //no-name flags do not support Synonyms
+		for _, f := range f.formal { //find if there is a Synonyms flag
+			if getValuePtr(value) == getValuePtr(f.Value) { //the same one
+				flag = f
+				f.Synonyms = append(f.Synonyms, name) //Synonyms
+				break
+			}
+		}
+	}
+	if nil == flag {
+		flag = &Flag{name, usage, value, value.String(), logic_name, required, []string{name}, ""}
+	}
+
 	_, alreadythere := f.formal[name]
 	if alreadythere {
 		var msg string
@@ -1057,7 +1116,7 @@ func (f *FlagSet) check_require() error {
 	for name, flg := range f.formal {
 		if flg.Required {
 			if _, ok := f.actual[name]; !ok {
-				return f.failf("[error] require but lack of flag -%s=<%s>", name, flg.LogicName)
+				return f.failf("[error] require but lack of flag %s<%s>", flg.GetNameShow(), flg.LogicName)
 			}
 		}
 	}
@@ -1071,11 +1130,51 @@ func (f *FlagSet) Parsed() bool {
 
 //auto genterate a name if name not assigned
 func (f *FlagSet) getAutoName(name string) string {
-	if name == "" {
+	if name == "" || strings.HasPrefix(name, gNoNamePrefix) {
 		f.auto_id++
-		name = fmt.Sprintf("{noname#%d}", f.auto_id)
+		name = fmt.Sprintf("%s%d}", gNoNamePrefix, f.auto_id)
 	}
 	return name
+}
+
+//add a Synonyms flag newname for old
+func AnotherName(newname, old string) (r bool) {
+	return CommandLine.AnotherName(newname, old)
+}
+
+//add a Synonyms flag newname for old
+func (f *FlagSet) AnotherName(newname, old string) (r bool) {
+	var msg string
+	r = true
+	if r && strings.HasPrefix(newname, gNoNamePrefix) {
+		msg = fmt.Sprintf("RepeatFlag: %s forbid newname", newname)
+		r = false
+	}
+	if _, ok := f.formal[newname]; r && ok {
+		msg = fmt.Sprintf("RepeatFlag: %s redefined", newname)
+		r = false
+	}
+	if r {
+		if flag, ok := f.formal[old]; ok {
+			flag.Synonyms = append(flag.Synonyms, newname)
+			f.formal[newname] = flag
+		} else {
+			msg = fmt.Sprintf("RepeatFlag: old %s not exists", old)
+			r = false
+		}
+	}
+
+	if !r {
+		var err string
+		if f.name == "" {
+			err = msg
+		} else {
+			err = fmt.Sprintf("%s %s", f.name, msg)
+		}
+		fmt.Fprintln(f.out(), err)
+		panic(err)
+	}
+	return
 }
 
 // Parse parses the command-line flags from os.Args[1:].  Must be called

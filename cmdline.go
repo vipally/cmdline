@@ -4,6 +4,7 @@ package cmdline
 import (
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 )
 
@@ -18,11 +19,8 @@ func format_path(s string) string {
 }
 
 func get_cmd(arg0 string) string {
-	cmd := format_path(arg0)
-	d := path.Dir(cmd) + "/"
-	app := strings.TrimPrefix(cmd, d)
-	app = strings.TrimSuffix(app, ".exe")
-	return app
+	ext := filepath.Ext(arg0)
+	return strings.TrimSuffix(filepath.Base(arg0), ext)
 }
 
 func WorkDir() string {

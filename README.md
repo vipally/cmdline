@@ -11,6 +11,7 @@
 	5. Add noname-flag support
 	6. Add /flag support
 	7. Fix "-flag = x" or "-flag= x" or "-flag =x" cause panic bug
+	8. Add synonyms support for flags
 ****
 
 	//usage of cmdline as follow
