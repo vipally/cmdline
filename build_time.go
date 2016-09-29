@@ -13,6 +13,7 @@ var (
 	buildTime = C.GoString(C.build_time())
 )
 
+//time that this package build
 func BuildTime() string {
 	return buildTime
 }
