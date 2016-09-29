@@ -15,9 +15,9 @@
 
 	Usage as follow:
 
-	import (
-    	"fmt"
-    	"github.com/vipally/cmdline"
+    import (
+        "fmt"
+        "github.com/vipally/cmdline"
     )
     func main() {
         var (
@@ -53,7 +53,7 @@
 
         //cmd example: ping -t=20 /4 127.0.0.1 --count =4 localhost -ttl= 5
         //output:
-		//host:127.0.0.1 host2:localhost v4:true ttl:5 count:4
+        //host:127.0.0.1 host2:localhost v4:true ttl:5 count:4
         //Usage of ([ping] Build [Sep 30 2016 00:50:14]):
         //  Summary:
         //    ping is an example of cmdline package usage.
