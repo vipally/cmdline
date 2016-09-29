@@ -309,6 +309,7 @@ type Flag struct {
 	Visitor   string   //name of what Synonyms is visiting this flag
 }
 
+//get name that will show in usage page, no-name ones returns empty and others synonyms
 func (f *Flag) GetNameShow() (r string) {
 	if !strings.HasPrefix(f.Name, gNoNamePrefix) {
 		r = fmt.Sprintf("-%s=", f.GetSynonyms())

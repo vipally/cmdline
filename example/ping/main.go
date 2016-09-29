@@ -40,7 +40,7 @@ func main() {
 	//Usage of ([ping] Build [Sep 29 2016 21:14:37]):
 	//  Summary:
 	//    ping is an example of cmdline package usage.
-
+	//
 	//  Usage:
 	//    ping [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <target_name>
 	//  -4=<v4>	ipv4
@@ -50,10 +50,10 @@ func main() {
 	//      ttl
 	//  <target_name>  required  string
 	//      target host ip or name
-
+	//
 	//  CopyRight:
 	//    no copyright defined
-
+	//
 	//  Details:
 	//    Version   :1.0.2
 	//    BulidTime :[Sep 29 2016 21:14:37]
