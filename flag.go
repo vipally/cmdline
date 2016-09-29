@@ -921,6 +921,18 @@ func getValuePtr(value Value) (r uintptr) {
 func (f *FlagSet) Var(value Value, name string, logic_name string, required bool, usage string) {
 	// Remember the default value as a string; it won't change.
 	name = f.getAutoName(name) //auto generate a name if not assigned a flag name
+
+	_, alreadythere := f.formal[name]
+	if alreadythere {
+		var msg string
+		if f.name == "" {
+			msg = fmt.Sprintf("flag redefined: %s", name)
+		} else {
+			msg = fmt.Sprintf("%s flag redefined: %s", f.name, name)
+		}
+		fmt.Fprintln(f.out(), msg)
+		panic(msg) // Happens only if flags are declared with identical names
+	}
 	var flag *Flag
 	if !strings.HasPrefix(name, gNoNamePrefix) { //no-name flags do not support Synonyms
 		for _, f := range f.formal { //find if there is a Synonyms flag
@@ -933,18 +945,6 @@ func (f *FlagSet) Var(value Value, name string, logic_name string, required bool
 	}
 	if nil == flag {
 		flag = &Flag{name, usage, value, value.String(), logic_name, required, []string{name}, ""}
-	}
-
-	_, alreadythere := f.formal[name]
-	if alreadythere {
-		var msg string
-		if f.name == "" {
-			msg = fmt.Sprintf("flag redefined: %s", name)
-		} else {
-			msg = fmt.Sprintf("%s flag redefined: %s", f.name, name)
-		}
-		fmt.Fprintln(f.out(), msg)
-		panic(msg) // Happens only if flags are declared with identical names
 	}
 	if f.formal == nil {
 		f.formal = make(map[string]*Flag)

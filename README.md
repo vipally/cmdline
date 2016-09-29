@@ -1,4 +1,4 @@
-# cmdline [![GoDoc](https://godoc.org/github.com/vipally/cmdline?status.svg)](https://godoc.org/github.com/vipally/cmdline) ![Version](https://img.shields.io/badge/version-1.2.0-green.svg)
+# cmdline [![GoDoc](https://godoc.org/github.com/vipally/cmdline?status.svg)](https://godoc.org/github.com/vipally/cmdline) ![Version](https://img.shields.io/badge/version-1.8.0-green.svg)
 	cmdline is a Golang package based on std.flag.
 	It extend the std flag package and improve the user interface and add nessary usage message.
 ****
@@ -14,41 +14,52 @@
 	8. Add synonyms support for flags
 ****
 
-	//usage of cmdline as follow
-	func main() {
-		cmdline.Summary("command <thiscmd> is used to copy a file to another path.")
-		cmdline.Details(`Command <thiscmd> is used to copy a file to another path.
-	    If the destnation file is exist, default ask for if will cover it.
-	    If flag -y used, it will cover the destnation file without ask.
-	    If flag -n used, it will not cover the destnation file without ask.
-		`)
-		cmdline.String("s", "src", ".", true, "source file path")
-		cmdline.String("d", "dst", ".", true, "destnation file path")
-		cmdline.Bool("c", "cover", false, false, "if cover the destnation file")
-		cmdline.Bool("y", "yes", false, false, "if auto select yes when ask for cover")
-		cmdline.Bool("n", "no", false, false, "if auto select no when ask for cover")
-		cmdline.Parse()
+### usage of package cmdline
 	
-		//[error] require but lack of flag -s=<src>
-		//Usage of [copy.exe]:
-		//  Summary:
-		//    command copy is used to copy a file to another path
-		//
-		//  Usage:
-		//    copy.exe [-c=<cover>] -d=<dst> [-n=<no>] -s=<src> [-y=<yes>]
-		//  -c=<cover>
-		//      if cover the destnation file
-		//  -d=<dst>  required  string (default ".")
-		//      destnation file path
-		//  -n=<no>	if auto select no when ask for cover
-		//  -s=<src>  required  string (default ".")
-		//      source file path
-		//  -y=<yes>
-		//      if auto select yes when ask for cover
-		//
-		//  Details:
-		//    Command copy is used to copy a file to another path.
-		//    If the destnation file is exist, default ask for if will cover it.
-		//    If flag -y used, it will cover the destnation file without ask.
-		//    If flag -n used, it will not cover the destnation file without ask.
-	}
+	cmdline.Version("1.0.2")
+	cmdline.Summary("<thiscmd> is an example of cmdline package usage.")
+	cmdline.Details(`Version   :<version>
+    BulidTime :<buildtime>
+    <thiscmd> is an example usage of github.com/vipally/cmdline package.`)
+	cmdline.CopyRight("no copyright defined")
+
+	//noname flag and require ones
+	cmdline.StringVar(&target_name, "", "target_name", "", true, "target host ip or name")
+
+	cmdline.BoolVar(&v4, "4", "v4", v4, false, "ipv4")
+
+	//synonym with the same variables
+	cmdline.IntVar(&ttl, "t", "ttl", ttl, false, "ttl")
+	cmdline.IntVar(&ttl, "ttl", "synonym of -t", ttl, true, "this is synonym of -t")
+
+	//define a synonym with method AnotherName
+	c := cmdline.Int("c", "count", 0, false, "count")
+	cmdline.AnotherName("count", "c")
+
+	cmdline.Parse()
+
+	fmt.Println(target_name, v4, ttl, *c)
+	fmt.Println(cmdline.GetUsage())
+
+	//output:
+	//Usage of ([ping] Build [Sep 29 2016 21:14:37]):
+	//  Summary:
+	//    ping is an example of cmdline package usage.
+
+	//  Usage:
+	//    ping [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <target_name>
+	//  -4=<v4>	ipv4
+	//  -c|count=<count>  int
+	//      count
+	//  -t|ttl=<ttl>  int
+	//      ttl
+	//  <target_name>  required  string
+	//      target host ip or name
+
+	//  CopyRight:
+	//    no copyright defined
+
+	//  Details:
+	//    Version   :1.0.2
+	//    BulidTime :[Sep 29 2016 21:14:37]
+	//    ping is an example usage of github.com/vipally/cmdline package.
