@@ -3,14 +3,14 @@
 // Blog    : http://blog.csdn.net/vipally
 // Site    : https://github.com/vipally
 
-package cmdline_test
+package cmdline
 
 /*    //comment this line to open the case
 import (
 	"flag"
 	"testing"
 
-	"github.com/vipally/cmdline"
+	//"github.com/vipally/cmdline"
 )
 
 //basic requirement test case
@@ -24,7 +24,7 @@ func TestFlag(t *testing.T) {
 		nCheck = []int{4, 5, 10}
 	)
 
-	argv := cmdline.SplitLine(line)
+	argv := SplitLine(line)
 	flg := flag.NewFlagSet("cmdline", flag.PanicOnError)
 	flg.StringVar(&s[0], "", "", "")
 	flg.IntVar(&n[0], "n", -1, "count")
@@ -55,7 +55,7 @@ func TestFlagFull(t *testing.T) {
 		nCheck = []int{1, 2, 3, 4, 5, 6}
 	)
 
-	argv := cmdline.SplitLine(line)
+	argv := SplitLine(line)
 	flg := flag.NewFlagSet("cmdline", flag.PanicOnError)
 	flg.StringVar(&s[0], "", "", "ip")
 	flg.StringVar(&s[1], "", "", "ip2")

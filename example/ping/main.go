@@ -21,13 +21,13 @@ func main() {
 	cmdline.Version("1.0.2")
 	cmdline.Summary("<thiscmd> is an example of cmdline package usage.")
 	cmdline.Details(`Version   :<version>
-    BulidTime :<buildtime>
-    <thiscmd> is an example usage of github.com/vipally/cmdline package.`)
+		BulidTime :<buildtime>
+ 		<thiscmd> is an example usage of github.com/vipally/cmdline package.`)
 	cmdline.CopyRight("no copyright defined")
 
 	//no-name flag and required ones
-	cmdline.StringVar(&host, "", "host", "", true, "host ip or name")
-	host2 := cmdline.String("", "host2", "", false, "second host ip or name")
+	cmdline.StringVar(&host, "", "host", "", false, "host ip or name")
+	host2 := cmdline.String("", "host2", "", false, "second host \nip or name")
 
 	cmdline.BoolVar(&v4, "4", "v4", v4, false, "ipv4")
 
@@ -46,26 +46,31 @@ func main() {
 
 	//cmd example: ping -t=20 /4 127.0.0.1 --count =4 localhost -ttl= 5
 	//output:
+	//
 	//host:127.0.0.1 host2:localhost v4:true ttl:5 count:4
-	//Usage of ([ping] Build [Sep 30 2016 00:50:14]):
+	//Usage of ([ping] Build [Sep 30 2016 21:54:21]):
 	//  Summary:
 	//    ping is an example of cmdline package usage.
 	//
 	//  Usage:
-	//    ping [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> [<host2>]
-	//  -4=<v4>       ipv4
+	//    ping [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> [<host2>
+	//  -4=<v4>
+	//      ipv4
 	//  -c|count=<count>  int
 	//      count
 	//  -t|ttl=<ttl>  int
 	//      ttl
-	//  <host>  required  string      host ip or name
-	//  <host2>  string       second host ip or name
+	//  <host>  required  string
+	//      host ip or name
+	//  <host2>  string
+	//      second host
+	//      ip or name
 	//
 	//  CopyRight:
 	//    no copyright defined
 	//
 	//  Details:
 	//    Version   :1.0.2
-	//    BulidTime :[Sep 30 2016 00:50:14]
+	//    BulidTime :[Sep 30 2016 21:54:21]
 	//    ping is an example usage of github.com/vipally/cmdline package.
 }

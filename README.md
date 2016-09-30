@@ -11,15 +11,16 @@
 
 	Ally Dale(vipally@gmail.com) modify from std.flag version 1.7
 	Main change list from std.flag:
-	1. Add LogicName and Required field for flag, and modify the flag define interface
-	2. Add Summary and Details and Version info to usage page
-	3. Add labels <thiscmd> <buildtime> <version> for getting runtime info in usage page
-	4. Add interface GetUsage() string
-	5. Modify Parse() logic
-	6. Add no-name flag support
-	7. Add "/flag" style support, named flags can lead with "/" or "-" or "--"
-	8. Fix "-flag = x" or "-flag= x" or "-flag =x" cause panic bug
-	9. Add synonyms support for with-name flags
+	1.  Add LogicName and Required field for flag, and modify the flag define interface
+	2.  Add Summary and Details and Version info to usage page
+	3.  Add labels <thiscmd> <buildtime> <version> for getting runtime info in usage page
+	4.  Add interface GetUsage() string
+	5.  Modify Parse() logic
+	6.  Add no-name flag support
+	7.  Add "/flag" style support, named flags can lead with "/" or "-" or "--"
+	8.  Fix "-flag = x" or "-flag= x" or "-flag =x" cause panic bug
+	9.  Add synonyms support for with-name flags
+	10. Format usage page line head with proper num of space
 
 ****
 
@@ -39,8 +40,8 @@
         cmdline.Version("1.0.2")
         cmdline.Summary("<thiscmd> is an example of cmdline package usage.")
         cmdline.Details(`Version   :<version>
-        BulidTime :<buildtime>
-        <thiscmd> is an example usage of github.com/vipally/cmdline package.`)
+            BulidTime :<buildtime>
+            <thiscmd> is an example usage of github.com/vipally/cmdline package.`)
         cmdline.CopyRight("no copyright defined")
         
         //no-name flag and required ones

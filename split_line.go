@@ -5,6 +5,14 @@
 
 package cmdline
 
+import (
+	"regexp"
+)
+
+var ( //new line with any space
+	gLineHeadExp = regexp.MustCompile("\n\\s*")
+)
+
 func isSpace(c byte) bool {
 	return (c == ' ' || c == '\t')
 }
@@ -45,4 +53,9 @@ func SplitLine(s string) []string {
 	}
 
 	return a[0 : na+1]
+}
+
+//FormatLineHead ensure all lines lead with linehead string
+func FormatLineHead(s, linehead string) string {
+	return gLineHeadExp.ReplaceAllString(s, linehead)
 }
