@@ -1057,7 +1057,7 @@ func (f *FlagSet) GetUsage() string {
 		}
 		// Boolean flags of one ASCII letter are so common we
 		// treat them specially, putting their usage on the same line.
-		if len(s) <= 9 { // space, space, '-', 'x'.
+		if len(s) <= 4 { // space, space, '-', 'x'.
 			buf.WriteString("\t")
 		} else {
 			// Four spaces before the tab triggers good alignment

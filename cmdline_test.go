@@ -19,13 +19,16 @@ func TestGetUsage(t *testing.T) {
 
   Usage:
     cmdline.test [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> [<host2>]
-  -4=<v4>	ipv4
+  -4=<v4>
+      ipv4
   -c|count=<count>  int
       count
   -t|ttl=<ttl>  int
       ttl
-  <host>  required  string	host ip or name
-  <host2>  string	second host ip or name
+  <host>  required  string
+      host ip or name
+  <host2>  string
+      second host ip or name
 
   CopyRight:
     no copyright defined

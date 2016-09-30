@@ -64,26 +64,31 @@
         
         //cmd example: ping -t=20 /4 127.0.0.1 --count =4 localhost -ttl= 5
         //output:
-		//host:127.0.0.1 host2:localhost v4:true ttl:5 count:4
-        //Usage of ([ping] Build [Sep 30 2016 00:50:14]):
+		//
+        //host:127.0.0.1 host2:localhost v4:true ttl:5 count:4
+        //Usage of ([ping] Build [Sep 30 2016 21:54:21]):
         //  Summary:
         //    ping is an example of cmdline package usage.
         //
         //  Usage:
-        //    ping [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> [<host2>]
-        //  -4=<v4>       ipv4
+        //    ping [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> [<host2>
+        //  -4=<v4>
+        //      ipv4
         //  -c|count=<count>  int
         //      count
         //  -t|ttl=<ttl>  int
         //      ttl
-        //  <host>  required  string      host ip or name
-        //  <host2>  string       second host ip or name
+        //  <host>  required  string
+        //      host ip or name
+        //  <host2>  string
+        //      second host ip or name
         //
         //  CopyRight:
         //    no copyright defined
         //
         //  Details:
         //    Version   :1.0.2
-        //    BulidTime :[Sep 30 2016 00:50:14]
+        //    BulidTime :[Sep 30 2016 21:54:21]
         //    ping is an example usage of github.com/vipally/cmdline package.
+
     }
