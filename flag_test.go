@@ -1,3 +1,8 @@
+// CopyRight 2016 @Ally Dale. All rights reserved.
+// Author  : Ally Dale(vipally@gmail.com)
+// Blog    : http://blog.csdn.net/vipally
+// Site    : https://github.com/vipally
+
 package cmdline_test
 
 /*    //comment this line to open the case
