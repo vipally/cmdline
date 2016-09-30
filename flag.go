@@ -1108,35 +1108,35 @@ func (f *FlagSet) check_require() error {
 }
 
 //Summary() set the summary info of the command, this will show on Usage()
-func Summary(summary string) string {
+func Summary(summary string) (old string) {
 	return CommandLine.Summary(summary)
 }
 
 //Details() set the detail info of the command, this will show on Usage()
-func Details(details string) string {
+func Details(details string) (old string) {
 	return CommandLine.Details(details)
 }
 
 //CopyRight() set the detail info of the command, this will show on Usage()
-func CopyRight(copyright string) string {
+func CopyRight(copyright string) (old string) {
 	return CommandLine.CopyRight(copyright)
 }
 
 //Summary() set the summary info of the command, this will show on Usage()
-func (f *FlagSet) Summary(summary string) (ret string) {
-	ret, f.summary = f.summary, ReplaceTags(summary)
+func (f *FlagSet) Summary(summary string) (old string) {
+	old, f.summary = f.summary, ReplaceTags(summary)
 	return
 }
 
 //Details() set the details info of the command, this will show on Usage()
-func (f *FlagSet) Details(details string) (ret string) {
-	ret, f.details = f.details, ReplaceTags(details)
+func (f *FlagSet) Details(details string) (old string) {
+	old, f.details = f.details, ReplaceTags(details)
 	return
 }
 
-//CopyRight() set the detail info of the command, this will show on Usage()
-func (f *FlagSet) CopyRight(copyright string) (ret string) {
-	ret, f.copyright = f.copyright, ReplaceTags(copyright)
+//CopyRight() set the copyright info of the command, this will show on Usage()
+func (f *FlagSet) CopyRight(copyright string) (old string) {
+	old, f.copyright = f.copyright, ReplaceTags(copyright)
 	return
 }
 
@@ -1149,34 +1149,34 @@ func (f *FlagSet) getAutoName(name string) string {
 	return name
 }
 
-//add a Synonyms flag newname for old
-func AnotherName(newname, old string) (r bool) {
+//AnotherName add a Synonyms flag newname for old
+func AnotherName(newname, old string) (ok bool) {
 	return CommandLine.AnotherName(newname, old)
 }
 
-//add a Synonyms flag newname for old
-func (f *FlagSet) AnotherName(newname, old string) (r bool) {
+//AnotherName add a Synonyms flag newname for old
+func (f *FlagSet) AnotherName(newname, old string) (ok bool) {
 	var msg string
-	r = true
-	if r && strings.HasPrefix(newname, gNoNamePrefix) {
+	ok = true
+	if ok && strings.HasPrefix(newname, gNoNamePrefix) {
 		msg = fmt.Sprintf("RepeatFlag: %s forbid newname", newname)
-		r = false
+		ok = false
 	}
-	if _, ok := f.formal[newname]; r && ok {
+	if _, _ok := f.formal[newname]; ok && _ok {
 		msg = fmt.Sprintf("RepeatFlag: %s redefined", newname)
-		r = false
+		ok = false
 	}
-	if r {
-		if flag, ok := f.formal[old]; ok {
+	if ok {
+		if flag, _ok := f.formal[old]; _ok {
 			flag.Synonyms = append(flag.Synonyms, newname)
 			f.formal[newname] = flag
 		} else {
 			msg = fmt.Sprintf("RepeatFlag: old %s not exists", old)
-			r = false
+			ok = false
 		}
 	}
 
-	if !r {
+	if !ok {
 		var err string
 		if f.name == "" {
 			err = msg

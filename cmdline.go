@@ -120,8 +120,7 @@ func Version(v string) (old string) {
 	return
 }
 
-//<version> <buildtime> <thiscmd>
-//replace these tags to proper string
+//ReplaceTags replace tags <version> <buildtime> <thiscmd> to proper string with in s
 func ReplaceTags(s string) string {
 	s = strings.Replace(s, "<thiscmd>", thisCmd, -1)
 	s = strings.Replace(s, "<buildtime>", BuildTime(), -1)
