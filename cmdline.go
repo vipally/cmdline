@@ -92,32 +92,36 @@ var (
 	version    = "unknown"
 )
 
+//format path strings
 func format_path(s string) string {
 	return path.Clean(s)
 }
 
+//get command
 func get_cmd(arg0 string) string {
 	ext := filepath.Ext(arg0)
 	return strings.TrimSuffix(filepath.Base(arg0), ext)
 }
 
+//get work path
 func WorkDir() string {
 	return workDir
 }
 
+//adapt for os.Exit
 func Exit(code int) {
 	os.Exit(code)
 }
 
+//Version set the version of cmd that will replace <version> tag.
+//It return the old value.
 func Version(v string) (old string) {
 	old, version = version, v
 	return
 }
 
-//<version>
-//<buildtime>
-//<thiscmd>
-//replace this tag to proper string
+//<version> <buildtime> <thiscmd>
+//replace these tags to proper string
 func ReplaceTags(s string) string {
 	s = strings.Replace(s, "<thiscmd>", thisCmd, -1)
 	s = strings.Replace(s, "<buildtime>", BuildTime(), -1)

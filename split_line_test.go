@@ -8,12 +8,12 @@ import (
 )
 
 func TestSplitLine(t *testing.T) {
-	s := `ping 127.0.0.1 		 -n 	2   " --x = 5 "  	a`
+	s := `ping 127.0.0.1 		 -n= 	2   " --x = 5 "  	a`
 	cmd := cmdline.SplitLine(s)
 	result := []string{
 		"ping",
 		"127.0.0.1",
-		"-n",
+		"-n=",
 		"2",
 		" --x = 5 ",
 		"a",

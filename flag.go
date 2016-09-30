@@ -293,7 +293,7 @@ type FlagSet struct {
 	summary   string //summary of this application
 	copyright string //copyright of this application
 	details   string //detail use of this application
-	auto_id   int    //no-name flag uses auto_id++ as auto-name sufix
+	auto_id   int    //no-name flag uses auto_id++ as auto-name suffix
 }
 
 // A Flag represents the state of a flag.
@@ -309,7 +309,8 @@ type Flag struct {
 	Visitor   string   //name of what Synonyms is visiting this flag
 }
 
-//get name that will show in usage page, no-name ones returns empty and others synonyms
+//GetNameShow return name that will show in usage page. with "-f|flag=" format
+//no-name ones returns empty and others synonyms
 func (f *Flag) GetNameShow() (r string) {
 	if !strings.HasPrefix(f.Name, gNoNamePrefix) {
 		r = fmt.Sprintf("-%s=", f.GetSynonyms())
@@ -317,7 +318,7 @@ func (f *Flag) GetNameShow() (r string) {
 	return
 }
 
-//get GetSynonyms of this flag
+//get GetSynonyms of this flag, return "f|flag" format
 func (f *Flag) GetSynonyms() string {
 	var b bytes.Buffer
 	for _, v := range f.Synonyms {
@@ -349,36 +350,6 @@ func (f *FlagSet) out() io.Writer {
 		return os.Stderr
 	}
 	return f.output
-}
-
-//Summary() set the summary info of the command, this will show on Usage()
-func Summary(summary string) {
-	CommandLine.Summary(summary)
-}
-
-//Details() set the detail info of the command, this will show on Usage()
-func Details(details string) {
-	CommandLine.Details(details)
-}
-
-//CopyRight() set the detail info of the command, this will show on Usage()
-func CopyRight(copyright string) {
-	CommandLine.CopyRight(copyright)
-}
-
-//Summary() set the summary info of the command, this will show on Usage()
-func (f *FlagSet) Summary(summary string) {
-	f.summary = ReplaceTags(summary)
-}
-
-//Details() set the details info of the command, this will show on Usage()
-func (f *FlagSet) Details(details string) {
-	f.details = ReplaceTags(details)
-}
-
-//CopyRight() set the detail info of the command, this will show on Usage()
-func (f *FlagSet) CopyRight(copyright string) {
-	f.copyright = ReplaceTags(copyright)
 }
 
 // SetOutput sets the destination for usage and error messages.
@@ -1093,6 +1064,23 @@ func (f *FlagSet) Parse(arguments []string) error {
 	return nil
 }
 
+// Parse parses the command-line flags from os.Args[1:].  Must be called
+// after all flags are defined and before flags are accessed by the program.
+func Parse() {
+	// Ignore errors; CommandLine is set for ExitOnError.
+	CommandLine.Parse(os.Args[1:])
+}
+
+// Parsed reports whether f.Parse has been called.
+func (f *FlagSet) Parsed() bool {
+	return f.parsed
+}
+
+// Parsed reports whether the command-line flags have been parsed.
+func Parsed() bool {
+	return CommandLine.Parsed()
+}
+
 func (f *FlagSet) handle_error(err error) (bool, error) {
 	if err != nil {
 		switch f.errorHandling {
@@ -1107,6 +1095,7 @@ func (f *FlagSet) handle_error(err error) (bool, error) {
 	return false, err
 }
 
+//check if there is a required flag and do not set it
 func (f *FlagSet) check_require() error {
 	for name, flg := range f.formal {
 		if flg.Required {
@@ -1118,9 +1107,37 @@ func (f *FlagSet) check_require() error {
 	return nil
 }
 
-// Parsed reports whether f.Parse has been called.
-func (f *FlagSet) Parsed() bool {
-	return f.parsed
+//Summary() set the summary info of the command, this will show on Usage()
+func Summary(summary string) string {
+	return CommandLine.Summary(summary)
+}
+
+//Details() set the detail info of the command, this will show on Usage()
+func Details(details string) string {
+	return CommandLine.Details(details)
+}
+
+//CopyRight() set the detail info of the command, this will show on Usage()
+func CopyRight(copyright string) string {
+	return CommandLine.CopyRight(copyright)
+}
+
+//Summary() set the summary info of the command, this will show on Usage()
+func (f *FlagSet) Summary(summary string) (ret string) {
+	ret, f.summary = f.summary, ReplaceTags(summary)
+	return
+}
+
+//Details() set the details info of the command, this will show on Usage()
+func (f *FlagSet) Details(details string) (ret string) {
+	ret, f.details = f.details, ReplaceTags(details)
+	return
+}
+
+//CopyRight() set the detail info of the command, this will show on Usage()
+func (f *FlagSet) CopyRight(copyright string) (ret string) {
+	ret, f.copyright = f.copyright, ReplaceTags(copyright)
+	return
 }
 
 //auto genterate a name if name not assigned
@@ -1170,18 +1187,6 @@ func (f *FlagSet) AnotherName(newname, old string) (r bool) {
 		panic(err)
 	}
 	return
-}
-
-// Parse parses the command-line flags from os.Args[1:].  Must be called
-// after all flags are defined and before flags are accessed by the program.
-func Parse() {
-	// Ignore errors; CommandLine is set for ExitOnError.
-	CommandLine.Parse(os.Args[1:])
-}
-
-// Parsed reports whether the command-line flags have been parsed.
-func Parsed() bool {
-	return CommandLine.Parsed()
 }
 
 // CommandLine is the default set of command-line flags, parsed from os.Args.

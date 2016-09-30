@@ -1,6 +1,6 @@
 package cmdline_test
 
-/*
+/*    //comment this line to open the case
 import (
 	"flag"
 	"testing"

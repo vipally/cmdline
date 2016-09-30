@@ -1,57 +1,73 @@
 package cmdline_test
 
 import (
-	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/vipally/cmdline"
 )
 
 func TestGetUsage(t *testing.T) {
-	//	msg := `Usage of [cmdline.test.exe]:
-	//  Summary:
-	//    summary
+	var sCheck = `
+  Summary:
+    cmdline.test is an example of cmdline package usage.
 
-	//  Usage:
-	//    cmdline.test.exe [-b=<b>] [-s=<s>] [-test.v=<s>]
-	//  -b=<b> (default true)	b
-	//  -s=<s>  string	s
-	//  -test.v=<s>  string
-	//      s
+  Usage:
+    cmdline.test [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> [<host2>]
+  -4=<v4>	ipv4
+  -c|count=<count>  int
+      count
+  -t|ttl=<ttl>  int
+      ttl
+  <host>  required  string	host ip or name
+  <host2>  string	second host ip or name
 
-	//  CopyRight:
-	//    copyright
+  CopyRight:
+    no copyright defined
 
-	//  Details:
-	//    details
-	//`
-	cmdline.Summary("summary")
-	cmdline.Details("details")
-	cmdline.CopyRight("copyright")
-	b := false
-	cmdline.BoolVar(&b, "b1", "b", true, false, "b")
-	cmdline.BoolVar(&b, "b2", "b", true, false, "b")
-	cmdline.AnotherName("b3", "b2")
-	cmdline.AnotherName("b4", "b3")
-	//cmdline.AnotherName("{noname#5}", "b3")
-	cmdline.String("", "noname1", "", false, "s")
-	cmdline.String("", "noname2", "", false, "s")
-	cmdline.String("s", "s", "", false, "s")
-	cmdline.String("test.v", "v", "", false, "s")
-	cmdline.String("{noname#10}", "{noname#10}", "", false, "s")
-	cmdline.Parse()
-	//	if cmdline.GetUsage() != msg {
-	//		fmt.Println(cmdline.GetUsage())
-	//		fmt.Println(msg)
-	//		t.Errorf("GetUsage() get unexpect string")
-	//	}
-	fmt.Println(cmdline.GetUsage())
+  Details:
+    Version   :1.0.2
+    BulidTime :<?buildtime>
+    cmdline.test is an example usage of github.com/vipally/cmdline package.
+`
+	var (
+		host, host2 string
+		v4          = false
+		ttl         = 0
+		c           = 0
+	)
+	cmdline.Version("1.0.2")
+	cmdline.Summary("<thiscmd> is an example of cmdline package usage.")
+	cmdline.Details(`Version   :<version>
+    BulidTime :<?buildtime>
+    <thiscmd> is an example usage of github.com/vipally/cmdline package.`)
+	cmdline.CopyRight("no copyright defined")
+
+	//no-name flag and required ones
+	cmdline.StringVar(&host, "", "host", "", true, "host ip or name")
+	cmdline.StringVar(&host2, "", "host2", "", false, "second host ip or name")
+
+	cmdline.BoolVar(&v4, "4", "v4", v4, false, "ipv4")
+
+	//synonym with the same variables
+	cmdline.IntVar(&ttl, "t", "ttl", ttl, false, "ttl")
+	cmdline.IntVar(&ttl, "ttl", "synonym of -t", ttl, true, "this is synonym of -t")
+
+	//define a synonym with method AnotherName
+	cmdline.IntVar(&c, "c", "count", 0, false, "count")
+	cmdline.AnotherName("count", "c")
+
+	//cmdline.Parse()
+	usage := cmdline.GetUsage()
+	if !strings.HasSuffix(usage, sCheck) {
+		t.Error("GetUsage fail", sCheck, usage)
+	}
 }
 
 func TestNonameFlag(t *testing.T) {
 
 	var (
-		line = ` ping	 /l=2 127.0.0.1 --n	 1   ip2  -i=3 ip3 -r=	 5 -w =4 /k = 6 `
+		line = ` ping	 /l=2 127.0.0.1 --n	 1   ip2  -i=3 ip3 -r=	 5 -w =4 /k = 666 -k2 = 6`
 
 		s       = []string{"", "", ""}
 		n       = []int{0, 0, 0, 0, 0, 0}
@@ -70,6 +86,7 @@ func TestNonameFlag(t *testing.T) {
 	cmd.IntVar(&n[3], "w", "w", -1, true, "timeout")
 	cmd.IntVar(&n[4], "r", "r", -1, true, "count")
 	cmd.IntVar(&n[5], "k", "k", -1, true, "host-list")
+	cmd.AnotherName("k2", "k")
 	cmd.Parse(argv[1:])
 
 	for i, v := range s {
