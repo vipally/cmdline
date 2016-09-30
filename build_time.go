@@ -13,7 +13,7 @@ var (
 	buildTime = C.GoString(C.build_time())
 )
 
-//time that this package build, eg [Sep 30 2016 00:50:14]
+//BuildTime returns the package build time from cgo, eg [Sep 30 2016 00:50:14]
 func BuildTime() string {
 	return buildTime
 }

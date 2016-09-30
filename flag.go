@@ -305,20 +305,21 @@ type Flag struct {
 
 	LogicName string   //logic name of this flag
 	Required  bool     //if this flag is force required
-	Synonyms  []string //different flags(-f/-flag) maybe the same ones, they are synonyms
+	Synonyms  []string //different flags(eg:-f/-flag) maybe the same ones, they are synonyms
 	Visitor   string   //name of what synonym is visiting this flag
 }
 
-//GetNameShow return name that will show in usage page. with "-f|flag=" format
-//no-name ones returns empty and others synonyms
-func (f *Flag) GetNameShow() (r string) {
+// GetShowName return name that will show in usage page. with "-f|flag=" format
+//
+// no-name ones returns empty and others synonyms
+func (f *Flag) GetShowName() (r string) {
 	if !strings.HasPrefix(f.Name, gNoNamePrefix) {
 		r = fmt.Sprintf("-%s=", f.GetSynonyms())
 	}
 	return
 }
 
-//get GetSynonyms of this flag, return "f|flag" format
+//GetSynonyms return synonyms of this flag, as "f|flag" format
 func (f *Flag) GetSynonyms() string {
 	var b bytes.Buffer
 	for _, v := range f.Synonyms {
@@ -495,86 +496,6 @@ func UnquoteUsage(flag *Flag) (name string, usage string) {
 // the global function PrintDefaults for more information.
 func (f *FlagSet) PrintDefaults() {
 	fmt.Fprintf(f.out(), f.GetUsage())
-}
-
-//GetUsage() return the usage string
-func GetUsage() string {
-	return CommandLine.GetUsage()
-}
-
-//GetUsage() return the usage string
-func (f *FlagSet) GetUsage() string {
-	buf := bytes.NewBufferString("")
-	buf.WriteString(fmt.Sprintf("Usage of ([%s] Build %s):\n", thisCmd, BuildTime()))
-	if f.summary != "" {
-		buf.WriteString(fmt.Sprintf("  Summary:\n    %s\n\n", f.summary))
-	}
-
-	buf.WriteString(fmt.Sprintf("  Usage:\n    %s", thisCmd))
-	f.VisitAll(func(flag *Flag) {
-		if flag.Visitor != flag.Synonyms[0] { //Synonyms show at the first one only
-			return
-		}
-
-		_fmt := ""
-		if flag.Required {
-			_fmt = " %s<%s>"
-		} else {
-			_fmt = " [%s<%s>]"
-		}
-		s := fmt.Sprintf(_fmt, flag.GetNameShow(), flag.LogicName)
-		buf.WriteString(s)
-	})
-	buf.WriteString("\n")
-
-	f.VisitAll(func(flag *Flag) {
-		if flag.Visitor != flag.Synonyms[0] { //Synonyms show at the first one only
-			return
-		}
-
-		s := fmt.Sprintf("  %s<%s>", flag.GetNameShow(), flag.LogicName) // Two spaces before -; see next two comments.
-		buf.WriteString(s)
-		if flag.Required {
-			buf.WriteString("  required")
-		}
-		name, usage := UnquoteUsage(flag)
-		if len(name) > 0 {
-			buf.WriteString("  ")
-			buf.WriteString(name)
-		}
-		if !isZeroValue(flag, flag.DefValue) {
-			if _, ok := flag.Value.(*stringValue); ok {
-				// put quotes on the value
-				buf.WriteString(fmt.Sprintf(" (default %q)", flag.DefValue))
-			} else {
-				buf.WriteString(fmt.Sprintf(" (default %v)", flag.DefValue))
-			}
-		}
-		// Boolean flags of one ASCII letter are so common we
-		// treat them specially, putting their usage on the same line.
-		if len(s) <= 9 { // space, space, '-', 'x'.
-			buf.WriteString("\t")
-		} else {
-			// Four spaces before the tab triggers good alignment
-			// for both 4- and 8-space tab stops.
-			buf.WriteString("\n      ")
-		}
-		buf.WriteString(usage)
-		buf.WriteString("\n")
-	})
-
-	if f.copyright != "" {
-		buf.WriteString(fmt.Sprintf("\n  CopyRight:\n    %s", f.copyright))
-		if f.copyright[len(f.copyright)-1] != '\n' {
-			buf.WriteRune('\n')
-		}
-	}
-
-	if f.details != "" {
-		buf.WriteString(fmt.Sprintf("\n  Details:\n    %s\n", f.details))
-	}
-
-	return buf.String()
 }
 
 // PrintDefaults prints, to standard error unless configured otherwise,
@@ -1081,6 +1002,86 @@ func Parsed() bool {
 	return CommandLine.Parsed()
 }
 
+//GetUsage returns the usage string
+func GetUsage() string {
+	return CommandLine.GetUsage()
+}
+
+//GetUsage returns the usage string
+func (f *FlagSet) GetUsage() string {
+	buf := bytes.NewBufferString("")
+	buf.WriteString(fmt.Sprintf("Usage of ([%s] Build %s):\n", thisCmd, BuildTime()))
+	if f.summary != "" {
+		buf.WriteString(fmt.Sprintf("  Summary:\n    %s\n\n", f.summary))
+	}
+
+	buf.WriteString(fmt.Sprintf("  Usage:\n    %s", thisCmd))
+	f.VisitAll(func(flag *Flag) {
+		if flag.Visitor != flag.Synonyms[0] { //Synonyms show at the first one only
+			return
+		}
+
+		_fmt := ""
+		if flag.Required {
+			_fmt = " %s<%s>"
+		} else {
+			_fmt = " [%s<%s>]"
+		}
+		s := fmt.Sprintf(_fmt, flag.GetShowName(), flag.LogicName)
+		buf.WriteString(s)
+	})
+	buf.WriteString("\n")
+
+	f.VisitAll(func(flag *Flag) {
+		if flag.Visitor != flag.Synonyms[0] { //Synonyms show at the first one only
+			return
+		}
+
+		s := fmt.Sprintf("  %s<%s>", flag.GetShowName(), flag.LogicName) // Two spaces before -; see next two comments.
+		buf.WriteString(s)
+		if flag.Required {
+			buf.WriteString("  required")
+		}
+		name, usage := UnquoteUsage(flag)
+		if len(name) > 0 {
+			buf.WriteString("  ")
+			buf.WriteString(name)
+		}
+		if !isZeroValue(flag, flag.DefValue) {
+			if _, ok := flag.Value.(*stringValue); ok {
+				// put quotes on the value
+				buf.WriteString(fmt.Sprintf(" (default %q)", flag.DefValue))
+			} else {
+				buf.WriteString(fmt.Sprintf(" (default %v)", flag.DefValue))
+			}
+		}
+		// Boolean flags of one ASCII letter are so common we
+		// treat them specially, putting their usage on the same line.
+		if len(s) <= 9 { // space, space, '-', 'x'.
+			buf.WriteString("\t")
+		} else {
+			// Four spaces before the tab triggers good alignment
+			// for both 4- and 8-space tab stops.
+			buf.WriteString("\n      ")
+		}
+		buf.WriteString(usage)
+		buf.WriteString("\n")
+	})
+
+	if f.copyright != "" {
+		buf.WriteString(fmt.Sprintf("\n  CopyRight:\n    %s", f.copyright))
+		if f.copyright[len(f.copyright)-1] != '\n' {
+			buf.WriteRune('\n')
+		}
+	}
+
+	if f.details != "" {
+		buf.WriteString(fmt.Sprintf("\n  Details:\n    %s\n", f.details))
+	}
+
+	return buf.String()
+}
+
 func (f *FlagSet) handle_error(err error) (bool, error) {
 	if err != nil {
 		switch f.errorHandling {
@@ -1100,41 +1101,41 @@ func (f *FlagSet) check_require() error {
 	for name, flg := range f.formal {
 		if flg.Required {
 			if _, ok := f.actual[name]; !ok {
-				return f.failf("[error] require but lack of flag %s<%s>", flg.GetNameShow(), flg.LogicName)
+				return f.failf("[error] require but lack of flag %s<%s>", flg.GetShowName(), flg.LogicName)
 			}
 		}
 	}
 	return nil
 }
 
-//Summary() set the summary info of the command, this will show on Usage()
+//Summary set the summary info of the command, this will show in usage page
 func Summary(summary string) (old string) {
 	return CommandLine.Summary(summary)
 }
 
-//Details() set the detail info of the command, this will show on Usage()
+//Details set the detail info of the command, this will show in usage page
 func Details(details string) (old string) {
 	return CommandLine.Details(details)
 }
 
-//CopyRight() set the detail info of the command, this will show on Usage()
+//CopyRight set the copyright info of the command, this will show in usage page
 func CopyRight(copyright string) (old string) {
 	return CommandLine.CopyRight(copyright)
 }
 
-//Summary() set the summary info of the command, this will show on Usage()
+//Summary set the summary info of the command, this will show in usage page
 func (f *FlagSet) Summary(summary string) (old string) {
 	old, f.summary = f.summary, ReplaceTags(summary)
 	return
 }
 
-//Details() set the details info of the command, this will show on Usage()
+//Details set the detail info of the command, this will show in usage page
 func (f *FlagSet) Details(details string) (old string) {
 	old, f.details = f.details, ReplaceTags(details)
 	return
 }
 
-//CopyRight() set the copyright info of the command, this will show on Usage()
+//CopyRight set the copyright info of the command, this will show in usage page
 func (f *FlagSet) CopyRight(copyright string) (old string) {
 	old, f.copyright = f.copyright, ReplaceTags(copyright)
 	return
@@ -1149,12 +1150,12 @@ func (f *FlagSet) getAutoName(name string) string {
 	return name
 }
 
-//AnotherName add a Synonyms flag newname for old
+//AnotherName add a synonym flag newname for old
 func AnotherName(newname, old string) (ok bool) {
 	return CommandLine.AnotherName(newname, old)
 }
 
-//AnotherName add a Synonyms flag newname for old
+//AnotherName add a synonym flag newname for old
 func (f *FlagSet) AnotherName(newname, old string) (ok bool) {
 	var msg string
 	ok = true

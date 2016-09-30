@@ -4,8 +4,7 @@ func isSpace(c byte) bool {
 	return (c == ' ' || c == '\t')
 }
 
-//not like strings.Split
-//split a command-line text with ' ' or '\t'
+//SplitLine splits a command-line text separated with any ' ' or '\t'
 func SplitLine(s string) []string {
 	n := len(s) / 2
 	len_sep := 1

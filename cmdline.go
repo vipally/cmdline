@@ -103,7 +103,7 @@ func get_cmd(arg0 string) string {
 	return strings.TrimSuffix(filepath.Base(arg0), ext)
 }
 
-//get work path
+//WorkDir get current working path
 func WorkDir() string {
 	return workDir
 }
