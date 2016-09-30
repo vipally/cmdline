@@ -55,7 +55,7 @@ func SplitLine(s string) []string {
 	return a[0 : na+1]
 }
 
-//FormatLineHead ensure all lines lead with linehead string
+//FormatLineHead ensure all lines of s are lead with linehead string
 func FormatLineHead(s, linehead string) string {
 	return gLineHeadExp.ReplaceAllString(s, linehead)
 }
