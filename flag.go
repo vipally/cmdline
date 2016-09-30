@@ -305,7 +305,7 @@ type Flag struct {
 
 	LogicName string   //logic name of this flag
 	Required  bool     //if this flag is force required
-	Synonyms  []string //different flags(eg:-f/-flag) maybe the same ones, so they are synonyms
+	Synonyms  []string //different flags(-f/-flag) maybe the same ones, they are synonyms
 	Visitor   string   //name of what synonym is visiting this flag
 }
 
