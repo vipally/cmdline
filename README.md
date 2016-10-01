@@ -1,12 +1,20 @@
 # cmdline [![GoDoc](https://godoc.org/github.com/vipally/cmdline?status.svg)](https://godoc.org/github.com/vipally/cmdline) ![Version](https://img.shields.io/badge/version-2.0.0.final-green.svg)
-	Package cmdline extends std.flag to support more useful features.
-	It extends the std.flag package and improve the user interface and add nessary usage message.
+Package cmdline extends std.flag to support more useful features.
+
+It extends the std.flag package and improve the user interface and add nessary usage message.
+
+***
+
+CopyRight 2016 @Ally Dale. All rights reserved.
+	
+Author  : [Ally Dale(vipally@gmail.com)](mailto://vipally@gmail.com)
+
+Blog    : [http://blog.csdn.net/vipally](http://blog.csdn.net/vipally)
+
+Site    : [https://github.com/vipally](https://github.com/vipally)
+
 ****
-	CopyRight 2016 @Ally Dale. All rights reserved.
-    Author  : Ally Dale(vipally@gmail.com)
-    Blog    : http://blog.csdn.net/vipally
-    Site    : https://github.com/vipally
-****
+
 ## change list
 
 	Ally Dale(vipally@gmail.com) modify from std.flag version 1.7
