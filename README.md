@@ -80,7 +80,7 @@ Site    : [https://github.com/vipally](https://github.com/vipally)
         //    ping is an example of cmdline package usage.
         //
         //  Usage:
-        //    ping [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> [<host2>
+        //    ping [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> [<host2>]
         //  -4=<v4>
         //      ipv4
         //  -c|count=<count>  int
