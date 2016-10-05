@@ -22,7 +22,7 @@ func main() {
 	cmdline.Summary("<thiscmd> is an example of cmdline package usage.")
 	cmdline.Details(`Version   :<version>
 		BulidTime :<buildtime>
- 		<thiscmd> is an example usage of github.com/vipally/cmdline package.`)
+		<thiscmd> is an example usage of github.com/vipally/cmdline package.`)
 	cmdline.CopyRight("no copyright defined")
 
 	//no-name flag and required ones

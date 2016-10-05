@@ -9,8 +9,8 @@ import (
 	"regexp"
 )
 
-var ( //new line with any space
-	gLineHeadExp = regexp.MustCompile("\n\\s*")
+var ( //new line with any \t
+	gLineHeadExp = regexp.MustCompile("(?m)^\\t*")
 )
 
 func isSpace(c byte) bool {
@@ -56,6 +56,8 @@ func SplitLine(s string) []string {
 }
 
 //FormatLineHead ensure all lines of s are lead with linehead string
-func FormatLineHead(s, linehead string) string {
-	return gLineHeadExp.ReplaceAllString(s, linehead)
+func FormatLineHead(s, linehead string) (r string) {
+	r = gLineHeadExp.ReplaceAllString(s, linehead)
+	//fmt.Printf("[%s][%s]\n[%s]\n", s, linehead, r)
+	return
 }

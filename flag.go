@@ -1012,7 +1012,7 @@ func (f *FlagSet) GetUsage() string {
 	buf := bytes.NewBufferString("")
 	buf.WriteString(fmt.Sprintf("Usage of ([%s] Build %s):\n", thisCmd, BuildTime()))
 	if f.summary != "" {
-		buf.WriteString(fmt.Sprintf("  Summary:\n    %s\n\n", FormatLineHead(f.summary, "\n    ")))
+		buf.WriteString(fmt.Sprintf("  Summary:\n%s\n\n", FormatLineHead(f.summary, "    ")))
 	}
 
 	buf.WriteString(fmt.Sprintf("  Usage:\n    %s", thisCmd))
@@ -1062,21 +1062,21 @@ func (f *FlagSet) GetUsage() string {
 		} else {
 			// Four spaces before the tab triggers good alignment
 			// for both 4- and 8-space tab stops.
-			buf.WriteString("\n    ")
+			buf.WriteString("\n")
 		}
-		buf.WriteString(FormatLineHead(usage, "\n    "))
+		buf.WriteString(FormatLineHead(usage, "    "))
 		buf.WriteString("\n")
 	})
 
 	if f.copyright != "" {
-		buf.WriteString(fmt.Sprintf("\n  CopyRight:\n    %s", FormatLineHead(f.copyright, "\n    ")))
+		buf.WriteString(fmt.Sprintf("\n  CopyRight:\n%s", FormatLineHead(f.copyright, "    ")))
 		if f.copyright[len(f.copyright)-1] != '\n' {
 			buf.WriteRune('\n')
 		}
 	}
 
 	if f.details != "" {
-		buf.WriteString(fmt.Sprintf("\n  Details:\n    %s\n", FormatLineHead(f.details, "\n    ")))
+		buf.WriteString(fmt.Sprintf("\n  Details:\n%s\n", FormatLineHead(f.details, "    ")))
 	}
 
 	return buf.String()
