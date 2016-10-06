@@ -326,7 +326,10 @@ func (f *Flag) GetSynonyms() string {
 		b.WriteString(v)
 		b.WriteByte('|')
 	}
-	b.Truncate(b.Len() - 1) //remove last '|'
+	if len(f.Synonyms) > 0 {
+		b.Truncate(b.Len() - 1) //remove last '|'
+	}
+
 	return b.String()
 }
 
