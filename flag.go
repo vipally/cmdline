@@ -1013,7 +1013,7 @@ func GetUsage() string {
 //GetUsage returns the usage string
 func (f *FlagSet) GetUsage() string {
 	buf := bytes.NewBufferString("")
-	buf.WriteString(fmt.Sprintf("Usage of ([%s] Build %s):\n", thisCmd, "" /*BuildTime()*/))
+	buf.WriteString(fmt.Sprintf("Usage of ([%s] Build %s):\n", thisCmd, BuildTime()))
 	if f.summary != "" {
 		buf.WriteString(fmt.Sprintf("  Summary:\n%s\n\n", FormatLineHead(f.summary, "    ")))
 	}
