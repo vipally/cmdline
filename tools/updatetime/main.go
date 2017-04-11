@@ -41,17 +41,18 @@ func main() {
 	if ss := strings.Split(s, ";"); ss != nil && len(ss) > 0 {
 		gGoPath = formatPath(ss[0]) + "/src/"
 	}
-	file = formatPath(file)
+	filefull := formatPath(file)
 
 	t := time.Now()
 	now := []byte(fmt.Sprintf(`"[%04d-%02d-%02d %02d:%02d:%02d]"`, t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second()))
 
-	if content, err := ioutil.ReadFile(file); err == nil {
+	if content, err := ioutil.ReadFile(filefull); err == nil {
 		dst := gExpTime.ReplaceAll(content, now)
 		//fmt.Println(string(dst))
-		if f, err := os.Create(file); err == nil {
+		if f, err := os.Create(filefull); err == nil {
 			f.Write(dst)
 			f.Close()
+			fmt.Printf("[%s] time updated %s\n", file, now)
 		} else {
 			fmt.Println(err)
 		}
