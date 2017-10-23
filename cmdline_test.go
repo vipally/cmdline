@@ -15,7 +15,7 @@ import (
 func TestGetUsage(t *testing.T) {
 	var sCheck = `Usage of ([<thiscmd>] Build <buildtime>):
   Summary:
-    cmdline.test is an example of cmdline package usage.
+    <thiscmd> is an example of cmdline package usage.
 
   Usage:
     cmdline.test [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> [<host2>]
