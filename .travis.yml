@@ -4,8 +4,8 @@ go:
 before_install:
   - go get github.com/mattn/goveralls
   - go get golang.org/x/tools/cmd/cover
-  - go get github.com/vipally/binary
+  - go get github.com/vipally/cmdline
 script:
   - go vet
   - go test
-  - $HOME/gopath/bin/goveralls -repotoken X9dt3MTIoRZ1nTCVh5ueEJeGrPFDQr23z
+  - $HOME/gopath/bin/goveralls -repotoken FCCTZWEjGq3DbdFsRmmg4Qbxd78C8Jr0J
