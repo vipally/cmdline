@@ -13,7 +13,7 @@ import (
 )
 
 func TestGetUsage(t *testing.T) {
-	var sCheck = `
+	var sCheck = `Usage of ([<thiscmd>] Build <buildtime>):
   Summary:
     cmdline.test is an example of cmdline package usage.
 
@@ -34,10 +34,11 @@ func TestGetUsage(t *testing.T) {
     no copyright defined
 
   Details:
-    Version   :1.0.2
-    BulidTime :<?buildtime>
+    Version   :<version>
+    BulidTime :<buildtime>
     cmdline.test is an example usage of github.com/vipally/cmdline package.
 `
+
 	var (
 		host, host2 string
 		v4          = false
@@ -45,10 +46,11 @@ func TestGetUsage(t *testing.T) {
 		c           = 0
 	)
 	cmdline.Version("1.0.2")
+	sCheck = cmdline.ReplaceTags(sCheck)
 	cmdline.Summary("<thiscmd> is an example of cmdline package usage.")
 	cmdline.Details(`Version   :<version>
-    BulidTime :<?buildtime>
-    <thiscmd> is an example usage of github.com/vipally/cmdline package.`)
+BulidTime :<buildtime>
+<thiscmd> is an example usage of github.com/vipally/cmdline package.`)
 	cmdline.CopyRight("no copyright defined")
 
 	//no-name flag and required ones
@@ -68,7 +70,7 @@ func TestGetUsage(t *testing.T) {
 	//cmdline.Parse()
 	usage := cmdline.GetUsage()
 	if !strings.HasSuffix(usage, sCheck) {
-		t.Error("GetUsage fail", sCheck, usage)
+		t.Errorf("GetUsage fail \nneed:\n%#v\ngot:\n%#v", sCheck, usage)
 	}
 }
 
