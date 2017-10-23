@@ -18,7 +18,7 @@ func TestGetUsage(t *testing.T) {
     <thiscmd> is an example of cmdline package usage.
 
   Usage:
-    cmdline.test [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> [<host2>]
+    <thiscmd> [-4=<v4>] [-c|count=<count>] [-t|ttl=<ttl>] <host> [<host2>]
   -4=<v4>
     ipv4
   -c|count=<count>  int
@@ -36,7 +36,7 @@ func TestGetUsage(t *testing.T) {
   Details:
     Version   :<version>
     BulidTime :<buildtime>
-    cmdline.test is an example usage of github.com/vipally/cmdline package.
+    <thiscmd> is an example usage of github.com/vipally/cmdline package.
 `
 
 	var (
