@@ -1,4 +1,8 @@
-# cmdline [![GoDoc](https://godoc.org/github.com/vipally/cmdline?status.svg)](https://godoc.org/github.com/vipally/cmdline) ![Version](https://img.shields.io/badge/version-2.0.0.final-green.svg)
+# cmdline
+
+![Version][version-img] [![Build status][travis-img]][travis-url] [![Coverage Status][coverage-img]][coverage-url] [![Go Report Card][report-img]][report-url] [![GoDoc][doc-img]][doc-url] [![License][license-img]][license-url]
+
+***
 Package cmdline extends std.flag to support more useful features.
 
 It extends the std.flag package and improve the user interface and add nessary usage message.
@@ -101,3 +105,16 @@ Site    : [https://github.com/vipally](https://github.com/vipally)
         //    ping is an example usage of github.com/vipally/cmdline package.
 
     }
+
+[travis-img]: https://travis-ci.org/vipally/cmdline.svg?branch=master
+[travis-url]: https://travis-ci.org/vipally/cmdline
+[coverage-img]: https://coveralls.io/repos/github/vipally/cmdline/badge.svg?branch=master
+[coverage-url]: https://coveralls.io/github/vipally/cmdline?branch=master
+[license-img]: http://img.shields.io/badge/license-MIT-green.svg?style=flat-square
+[license-url]: http://opensource.org/licenses/MIT
+[doc-img2]: http://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square
+[doc-img]: https://godoc.org/github.com/vipally/cmdline?status.svg
+[doc-url]: https://godoc.org/github.com/vipally/cmdline
+[report-img]: https://goreportcard.com/badge/github.com/vipally/cmdline
+[report-url]: https://goreportcard.com/report/github.com/vipally/cmdline
+[version-img]: https://img.shields.io/badge/version-2.0.0.final-green.svg
