@@ -1153,13 +1153,13 @@ func (f *FlagSet) getAutoName(name string) string {
 	return name
 }
 
-//AnotherName add a synonym flag newname for old
-func AnotherName(newname, old string) (ok bool) {
-	return CommandLine.AnotherName(newname, old)
+//Alias add a synonym flag newname for old
+func Alias(newname, old string) (ok bool) {
+	return CommandLine.Alias(newname, old)
 }
 
-//AnotherName add a synonym flag newname for old
-func (f *FlagSet) AnotherName(newname, old string) (ok bool) {
+//Alias add a synonym flag newname for old
+func (f *FlagSet) Alias(newname, old string) (ok bool) {
 	var msg string
 	ok = true
 	if ok && strings.HasPrefix(newname, gNoNamePrefix) {
