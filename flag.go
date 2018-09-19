@@ -861,7 +861,7 @@ func (f *FlagSet) parseOne() (bool, error) {
 		return false, nil
 	}
 	s := f.args[0]
-	if s == "" || !isFlagLead(s) {
+	if s == "" || isFlagLead(s) {
 		return false, nil
 	}
 
@@ -880,7 +880,6 @@ func (f *FlagSet) parseOne() (bool, error) {
 				break
 			}
 		}
-
 	} else {
 		name = f.getAutoName("") //auto generate a name if not assigned a flag name
 		value = s
