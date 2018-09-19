@@ -408,7 +408,7 @@ func (f *FlagSet) GetUsage() string {
 	return buf.String()
 }
 
-func (f *FlagSet) handle_error(err error) (bool, error) {
+func (f *FlagSet) handleError(err error) (bool, error) {
 	if err != nil {
 		switch f.errorHandling {
 		case ContinueOnError:
@@ -423,7 +423,7 @@ func (f *FlagSet) handle_error(err error) (bool, error) {
 }
 
 //check if there is a required flag and do not set it
-func (f *FlagSet) check_require() error {
+func (f *FlagSet) checkRequiredFlag() error {
 	for name, flg := range f.formal {
 		if flg.Required {
 			if _, ok := f.actual[name]; !ok {
@@ -532,12 +532,12 @@ func (f *FlagSet) Parse(arguments []string) error {
 		if err == nil {
 			break
 		}
-		if ok, err := f.handle_error(err); ok {
+		if ok, err := f.handleError(err); ok {
 			return err
 		}
 	}
-	if err := f.check_require(); err != nil {
-		if ok, err_r := f.handle_error(err); ok {
+	if err := f.checkRequiredFlag(); err != nil {
+		if ok, err_r := f.handleError(err); ok {
 			return err_r
 		}
 	}
