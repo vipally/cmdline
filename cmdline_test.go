@@ -13,7 +13,7 @@ import (
 )
 
 func TestGetUsage(t *testing.T) {
-	var sCheck = `Usage of ([<thiscmd>] Build <buildtime>):
+	var sCheck = `Usage of ([<thiscmd>] Build [<versiontime>]):
   Summary:
     <thiscmd> is an example of cmdline package usage.
 
@@ -34,8 +34,11 @@ func TestGetUsage(t *testing.T) {
     no copyright defined
 
   Details:
-    Version   :<version>
-    BulidTime :<buildtime>
+    AppName     : <appname>
+    Version     : <version>
+    VersionTime : <versiontime>
+    VersionTag  : <versiontag>
+    Validity    : <validity>
     <thiscmd> is an example usage of github.com/vipally/cmdline package.
 `
 
@@ -45,11 +48,18 @@ func TestGetUsage(t *testing.T) {
 		ttl         = 0
 		c           = 0
 	)
+	cmdline.AppName("example")
 	cmdline.Version("1.0.2")
+	cmdline.VersionTime("2018-09-01")
+	cmdline.VersionTag("abcdef0123456789")
+	cmdline.Validity("2019-09-01 00:00:00")
 	sCheck = cmdline.ReplaceTags(sCheck)
 	cmdline.Summary("<thiscmd> is an example of cmdline package usage.")
-	cmdline.Details(`Version   :<version>
-BulidTime :<buildtime>
+	cmdline.Details(`AppName     : <appname>
+Version     : <version>
+VersionTime : <versiontime>
+VersionTag  : <versiontag>
+Validity    : <validity>
 <thiscmd> is an example usage of github.com/vipally/cmdline package.`)
 	cmdline.CopyRight("no copyright defined")
 
@@ -69,6 +79,7 @@ BulidTime :<buildtime>
 
 	//cmdline.Parse()
 	usage := cmdline.GetUsage()
+	//fmt.Println(usage)
 	if !strings.HasSuffix(usage, sCheck) {
 		t.Errorf("GetUsage fail \nneed:\n%#v\ngot:\n%#v", sCheck, usage)
 	}

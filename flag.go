@@ -1,7 +1,3 @@
-//2016-08-16
-//Ally(vipally@gmail.com) modify from std.flag version 1.11
-//change list see cmdline.go
-
 // Copyright 2009 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
@@ -294,14 +290,16 @@ type FlagSet struct {
 	copyright   string //copyright of this application
 	details     string //detail use of this application
 	autoId      int    //no-name flag uses autoId++ as auto-name suffix
-	version     string
-	versionTime string
-	versionTag  string
+	appName     string //name of app
+	version     string //version
+	versionTime string //version time
+	versionTag  string //version tag
+	validity    string //validity period
 }
 
 // A Flag represents the state of a flag.
 type Flag struct {
-	Name     string // name as it appears on command line
+	Name     string // name as it appears on command line(instead by Synonyms )
 	Usage    string // help message
 	Value    Value  // value as set
 	DefValue string // default value (as text); for usage message
@@ -313,11 +311,11 @@ type Flag struct {
 }
 
 // sortFlags returns the flags as a slice in lexicographical sorted order.
-func sortFlags(flags map[string]*Flag) []*Flag {
+func sortFlags(flags map[string]*Flag) ([]*Flag, []string) {
 	list := make(sort.StringSlice, len(flags))
 	i := 0
-	for _, f := range flags {
-		list[i] = f.Name
+	for name, _ := range flags {
+		list[i] = name
 		i++
 	}
 	list.Sort()
@@ -325,7 +323,7 @@ func sortFlags(flags map[string]*Flag) []*Flag {
 	for i, name := range list {
 		result[i] = flags[name]
 	}
-	return result
+	return result, list
 }
 
 // Output returns the destination for usage and error messages. os.Stderr is returned if
@@ -356,7 +354,9 @@ func (f *FlagSet) SetOutput(output io.Writer) {
 // VisitAll visits the flags in lexicographical order, calling fn for each.
 // It visits all flags, even those not set.
 func (f *FlagSet) VisitAll(fn func(*Flag)) {
-	for _, flag := range sortFlags(f.formal) {
+	list, names := sortFlags(f.formal)
+	for i, flag := range list {
+		flag.Visitor = names[i]
 		fn(flag)
 	}
 }
@@ -370,7 +370,9 @@ func VisitAll(fn func(*Flag)) {
 // Visit visits the flags in lexicographical order, calling fn for each.
 // It visits only those flags that have been set.
 func (f *FlagSet) Visit(fn func(*Flag)) {
-	for _, flag := range sortFlags(f.actual) {
+	list, names := sortFlags(f.actual)
+	for i, flag := range list {
+		flag.Visitor = names[i]
 		fn(flag)
 	}
 }
@@ -865,17 +867,18 @@ func (f *FlagSet) parseOne() (bool, error) {
 	}
 	s := f.args[0]
 	if s == "" || isFlagLead(s) {
+		f.args = f.args[1:]
 		return false, nil
 	}
 
 	name, value := "", ""
 	if isFlagLeadByte(s[0]) {
 		numMinuses := 1
-		if s[1] == '-' {
+		if len(s) > 1 && s[0] == '-' && s[1] == '-' {
 			numMinuses++
 		}
 
-		name, value = s[numMinuses:], ""
+		name = s[numMinuses:]
 		for i := 0; i < len(name); i++ { //split at first '='
 			if name[i] == '=' {
 				value = name[i+1:]
@@ -917,7 +920,7 @@ func (f *FlagSet) parseOne() (bool, error) {
 		}
 	} else {
 		// It must have a value, which might be the next argument.
-		for len(f.args) > 0 && (value == "" || value == "=") { //consider "-f = 1" or "-f= 1" or "-f =1" cases
+		for len(f.args) > 0 && (value == "" || value == "=") { //consider "-f = x" or "-f= x" or "-f =x" cases
 			value, f.args = f.args[0], f.args[1:]
 			if value[0] == '=' {
 				value = value[1:]
@@ -1008,6 +1011,15 @@ func NewFlagSet(name string, errorHandling ErrorHandling) *FlagSet {
 	f := &FlagSet{
 		name:          name,
 		errorHandling: errorHandling,
+
+		appName:     "<none>",
+		version:     "<none>",
+		versionTime: "<none>",
+		versionTag:  "<none>",
+		validity:    "<none>",
+		summary:     "<none>",
+		details:     "<none>",
+		copyright:   "<none>",
 	}
 	f.Usage = f.defaultUsage
 	return f

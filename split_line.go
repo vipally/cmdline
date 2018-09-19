@@ -19,7 +19,7 @@ func isSpace(c byte) bool {
 
 //SplitLine splits a command-line text separated with any ' ' or '\t'
 func SplitLine(s string) []string {
-	n := len(s) / 2
+	n := (len(s) + 1) / 2
 	lenSep := 1
 	start := 0
 	a := make([]string, n)
@@ -58,6 +58,5 @@ func SplitLine(s string) []string {
 //FormatLineHead ensure all lines of s are lead with linehead string
 func FormatLineHead(s, lineHead string) (r string) {
 	r = lineHeadExpr.ReplaceAllString(s, lineHead)
-	//fmt.Printf("[%s][%s]\n[%s]\n", s, linehead, r)
 	return
 }

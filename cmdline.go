@@ -97,11 +97,8 @@ import (
 )
 
 var (
-	thisCmd     = getCmd(os.Args[0])
-	workDir, _  = os.Getwd()
-	version     = "undefine"
-	versionTime = ""
-	versionTag  = ""
+	thisCmd    = getCmd(os.Args[0])
+	workDir, _ = os.Getwd()
 )
 
 //format path strings
@@ -123,40 +120,4 @@ func WorkDir() string {
 //adapt for os.Exit
 func Exit(code int) {
 	os.Exit(code)
-}
-
-//Version set the version of cmd that will replace <version> tag.
-//It return the old value.
-func Version(v string) (old string) {
-	old, version = version, v
-	return
-}
-
-func VersionTime(v string) (old string) {
-	old, versionTime = versionTime, v
-	return
-}
-
-func VersionTag(v string) (old string) {
-	old, versionTag = versionTag, v
-	return
-}
-
-func GetVersion() string {
-	return version
-}
-func GetVersionTime() string {
-	return versionTime
-}
-func GetVersionTag() string {
-	return versionTag
-}
-
-//ReplaceTags replace tags <version> <versiontime> <versiontag> <thiscmd> to proper string with in s
-func ReplaceTags(s string) string {
-	s = strings.Replace(s, "<thiscmd>", thisCmd, -1)
-	s = strings.Replace(s, "<versiontime>", GetVersionTime(), -1)
-	s = strings.Replace(s, "<versiontag>", GetVersionTag(), -1)
-	s = strings.Replace(s, "<version>", version, -1)
-	return s
 }

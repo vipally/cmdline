@@ -336,7 +336,7 @@ func GetUsage() string {
 //GetUsage returns the usage string
 func (f *FlagSet) GetUsage() string {
 	buf := bytes.NewBufferString("")
-	buf.WriteString(fmt.Sprintf("Usage of ([%s] Build %s):\n", thisCmd, GetVersionTime()))
+	buf.WriteString(fmt.Sprintf("Usage of ([%s] Build [%s]):\n", thisCmd, f.GetVersionTime()))
 	if f.summary != "" {
 		buf.WriteString(fmt.Sprintf("  Summary:\n%s\n\n", FormatLineHead(f.summary, "    ")))
 	}
@@ -434,6 +434,26 @@ func (f *FlagSet) checkRequiredFlag() error {
 	return nil
 }
 
+func AppName(appName string) (old string) {
+	return CommandLine.AppName(appName)
+}
+
+func Version(version string) (old string) {
+	return CommandLine.Version(version)
+}
+
+func VersionTime(versionTime string) (old string) {
+	return CommandLine.VersionTime(versionTime)
+}
+
+func VersionTag(versionTag string) (old string) {
+	return CommandLine.VersionTag(versionTag)
+}
+
+func Validity(validity string) (old string) {
+	return CommandLine.Validity(validity)
+}
+
 //Summary set the summary info of the command, this will show in usage page
 func Summary(summary string) (old string) {
 	return CommandLine.Summary(summary)
@@ -449,22 +469,125 @@ func CopyRight(copyright string) (old string) {
 	return CommandLine.CopyRight(copyright)
 }
 
+func GetAppName() string {
+	return CommandLine.GetAppName()
+}
+
+func GetVersion() string {
+	return CommandLine.GetVersion()
+}
+
+func GetVersionTime() string {
+	return CommandLine.GetVersionTime()
+}
+
+func GetVersionTag() string {
+	return CommandLine.GetVersionTag()
+}
+
+func GetValidity() string {
+	return CommandLine.GetValidity()
+}
+
+func GetSummary() string {
+	return CommandLine.GetSummary()
+}
+
+func GetDetails() string {
+	return CommandLine.GetDetails()
+}
+
+func GetCopyRight() string {
+	return CommandLine.GetCopyRight()
+}
+
+func ReplaceTags(s string) string {
+	return CommandLine.ReplaceTags(s)
+}
+
+func (f *FlagSet) ReplaceTags(s string) string {
+	s = strings.Replace(s, "<thiscmd>", thisCmd, -1)
+	s = strings.Replace(s, "<appname>", f.GetAppName(), -1)
+	s = strings.Replace(s, "<versiontime>", f.GetVersionTime(), -1)
+	s = strings.Replace(s, "<versiontag>", f.GetVersionTag(), -1)
+	s = strings.Replace(s, "<version>", f.GetVersion(), -1)
+	s = strings.Replace(s, "<validity>", f.GetValidity(), -1)
+	return s
+}
+
+func (f *FlagSet) AppName(appName string) (old string) {
+	old, f.appName = f.appName, appName
+	return
+}
+
+func (f *FlagSet) Version(version string) (old string) {
+	old, f.version = f.version, version
+	return
+}
+
+func (f *FlagSet) VersionTime(versionTime string) (old string) {
+	old, f.versionTime = f.versionTime, versionTime
+	return
+}
+
+func (f *FlagSet) VersionTag(versionTag string) (old string) {
+	old, f.versionTag = f.versionTag, versionTag
+	return
+}
+
+func (f *FlagSet) Validity(validity string) (old string) {
+	old, f.validity = f.validity, validity
+	return
+}
+
 //Summary set the summary info of the command, this will show in usage page
 func (f *FlagSet) Summary(summary string) (old string) {
-	old, f.summary = f.summary, ReplaceTags(summary)
+	old, f.summary = f.summary, f.ReplaceTags(summary)
 	return
 }
 
 //Details set the detail info of the command, this will show in usage page
 func (f *FlagSet) Details(details string) (old string) {
-	old, f.details = f.details, ReplaceTags(details)
+	old, f.details = f.details, f.ReplaceTags(details)
 	return
 }
 
 //CopyRight set the copyright info of the command, this will show in usage page
 func (f *FlagSet) CopyRight(copyright string) (old string) {
-	old, f.copyright = f.copyright, ReplaceTags(copyright)
+	old, f.copyright = f.copyright, f.ReplaceTags(copyright)
 	return
+}
+
+func (f *FlagSet) GetAppName() string {
+	return f.appName
+}
+
+func (f *FlagSet) GetVersion() string {
+	return f.version
+}
+
+func (f *FlagSet) GetVersionTime() string {
+	return f.versionTime
+}
+
+func (f *FlagSet) GetVersionTag() string {
+	return f.versionTag
+}
+
+func (f *FlagSet) GetValidity() string {
+	return f.validity
+}
+
+func (f *FlagSet) GetSummary() string {
+	return f.summary
+}
+
+func (f *FlagSet) GetDetails() string {
+	return f.details
+}
+
+func (f *FlagSet) GetCopyRight() string {
+	return f.copyright
 }
 
 //auto genterate a name if name not assigned
@@ -486,11 +609,11 @@ func (f *FlagSet) Alias(newname, old string) (ok bool) {
 	var msg string
 	ok = true
 	if ok && strings.HasPrefix(newname, gNoNamePrefix) {
-		msg = fmt.Sprintf("RepeatFlag: %s forbid newname", newname)
+		msg = fmt.Sprintf("Alias: forbid %s as newname", newname)
 		ok = false
 	}
 	if _, _ok := f.formal[newname]; ok && _ok {
-		msg = fmt.Sprintf("RepeatFlag: %s redefined", newname)
+		msg = fmt.Sprintf("Alias: %s redefined", newname)
 		ok = false
 	}
 	if ok {
@@ -498,7 +621,7 @@ func (f *FlagSet) Alias(newname, old string) (ok bool) {
 			flag.Synonyms = append(flag.Synonyms, newname)
 			f.formal[newname] = flag
 		} else {
-			msg = fmt.Sprintf("RepeatFlag: old %s not exists", old)
+			msg = fmt.Sprintf("Alias: old name %s not exists", old)
 			ok = false
 		}
 	}
