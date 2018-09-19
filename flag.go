@@ -290,10 +290,13 @@ type FlagSet struct {
 	errorHandling ErrorHandling
 	output        io.Writer // nil means stderr; use out() accessor
 
-	summary   string //summary of this application
-	copyright string //copyright of this application
-	details   string //detail use of this application
-	auto_id   int    //no-name flag uses auto_id++ as auto-name suffix
+	summary     string //summary of this application
+	copyright   string //copyright of this application
+	details     string //detail use of this application
+	autoId      int    //no-name flag uses autoId++ as auto-name suffix
+	version     string
+	versionTime string
+	versionTag  string
 }
 
 // A Flag represents the state of a flag.

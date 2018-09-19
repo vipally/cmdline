@@ -10,7 +10,7 @@ import (
 )
 
 var ( //new line with any \t
-	gLineHeadExp = regexp.MustCompile("(?m)^\\t*")
+	lineHeadExpr = regexp.MustCompile(`(?m)^\t*`)
 )
 
 func isSpace(c byte) bool {
@@ -20,13 +20,13 @@ func isSpace(c byte) bool {
 //SplitLine splits a command-line text separated with any ' ' or '\t'
 func SplitLine(s string) []string {
 	n := len(s) / 2
-	len_sep := 1
+	lenSep := 1
 	start := 0
 	a := make([]string, n)
 	na := 0
 	inString := 0
 	escape := 0
-	for i := 0; i+len_sep <= len(s) && na+1 < n; i++ {
+	for i := 0; i+lenSep <= len(s) && na+1 < n; i++ {
 		if s[i] == '\'' || s[i] == '"' { //" xxxx yyyy " case, do not include \"
 			inString++
 			escape = 1
@@ -37,12 +37,12 @@ func SplitLine(s string) []string {
 		}
 		if inString%2 == 0 && isSpace(s[i]) {
 			if start == i { //escape continuous space
-				start += len_sep
+				start += lenSep
 			} else {
 				a[na] = s[start+escape : i-escape]
 				na++
-				start = i + len_sep
-				i += len_sep - 1
+				start = i + lenSep
+				i += lenSep - 1
 			}
 		}
 	}
@@ -56,8 +56,8 @@ func SplitLine(s string) []string {
 }
 
 //FormatLineHead ensure all lines of s are lead with linehead string
-func FormatLineHead(s, linehead string) (r string) {
-	r = gLineHeadExp.ReplaceAllString(s, linehead)
+func FormatLineHead(s, lineHead string) (r string) {
+	r = lineHeadExpr.ReplaceAllString(s, lineHead)
 	//fmt.Printf("[%s][%s]\n[%s]\n", s, linehead, r)
 	return
 }

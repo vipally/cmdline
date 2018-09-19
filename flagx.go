@@ -336,7 +336,7 @@ func GetUsage() string {
 //GetUsage returns the usage string
 func (f *FlagSet) GetUsage() string {
 	buf := bytes.NewBufferString("")
-	buf.WriteString(fmt.Sprintf("Usage of ([%s] Build %s):\n", thisCmd, BuildTime()))
+	buf.WriteString(fmt.Sprintf("Usage of ([%s] Build %s):\n", thisCmd, GetVersionTime()))
 	if f.summary != "" {
 		buf.WriteString(fmt.Sprintf("  Summary:\n%s\n\n", FormatLineHead(f.summary, "    ")))
 	}
@@ -470,8 +470,8 @@ func (f *FlagSet) CopyRight(copyright string) (old string) {
 //auto genterate a name if name not assigned
 func (f *FlagSet) getAutoName(name string) string {
 	if name == "" || strings.HasPrefix(name, gNoNamePrefix) {
-		f.auto_id++
-		name = fmt.Sprintf("%s%d}", gNoNamePrefix, f.auto_id)
+		f.autoId++
+		name = fmt.Sprintf("%s%d}", gNoNamePrefix, f.autoId)
 	}
 	return name
 }
@@ -523,7 +523,7 @@ func (f *FlagSet) Alias(newname, old string) (ok bool) {
 func (f *FlagSet) Parse(arguments []string) error {
 	f.parsed = true
 	f.args = arguments
-	f.auto_id = 0 //reset auto_id for parse logic to generate noname flags
+	f.autoId = 0 //reset auto_id for parse logic to generate noname flags
 	for {
 		seen, err := f.parseOne()
 		if seen {

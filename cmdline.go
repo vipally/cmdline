@@ -97,18 +97,20 @@ import (
 )
 
 var (
-	thisCmd    = get_cmd(os.Args[0])
-	workDir, _ = os.Getwd()
-	version    = "unknown"
+	thisCmd     = getCmd(os.Args[0])
+	workDir, _  = os.Getwd()
+	version     = "undefine"
+	versionTime = ""
+	versionTag  = ""
 )
 
 //format path strings
-func format_path(s string) string {
+func formatPath(s string) string {
 	return path.Clean(s)
 }
 
 //get command
-func get_cmd(arg0 string) string {
+func getCmd(arg0 string) string {
 	ext := filepath.Ext(arg0)
 	return strings.TrimSuffix(filepath.Base(arg0), ext)
 }
@@ -130,10 +132,31 @@ func Version(v string) (old string) {
 	return
 }
 
-//ReplaceTags replace tags <version> <buildtime> <thiscmd> to proper string with in s
+func VersionTime(v string) (old string) {
+	old, versionTime = versionTime, v
+	return
+}
+
+func VersionTag(v string) (old string) {
+	old, versionTag = versionTag, v
+	return
+}
+
+func GetVersion() string {
+	return version
+}
+func GetVersionTime() string {
+	return versionTime
+}
+func GetVersionTag() string {
+	return versionTag
+}
+
+//ReplaceTags replace tags <version> <versiontime> <versiontag> <thiscmd> to proper string with in s
 func ReplaceTags(s string) string {
 	s = strings.Replace(s, "<thiscmd>", thisCmd, -1)
-	s = strings.Replace(s, "<buildtime>", BuildTime(), -1)
+	s = strings.Replace(s, "<versiontime>", GetVersionTime(), -1)
+	s = strings.Replace(s, "<versiontag>", GetVersionTag(), -1)
 	s = strings.Replace(s, "<version>", version, -1)
 	return s
 }
