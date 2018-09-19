@@ -4,9 +4,9 @@
 
 package cmdline_test
 
+/*
 import (
 	"bytes"
-	. "flag"
 	"fmt"
 	"io"
 	"os"
@@ -15,6 +15,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	. "github.com/vipally/cmdline"
 )
 
 func boolString(s string) string {
@@ -491,3 +493,4 @@ func TestGetters(t *testing.T) {
 		t.Errorf("unexpected output: got %v, expected %v", fs.Output(), expectedOutput)
 	}
 }
+*/

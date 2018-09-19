@@ -65,7 +65,7 @@ BulidTime :<buildtime>
 
 	//define a synonym with method AnotherName
 	cmdline.IntVar(&c, "c", "count", 0, false, "count")
-	cmdline.AnotherName("count", "c")
+	cmdline.Alias("count", "c")
 
 	//cmdline.Parse()
 	usage := cmdline.GetUsage()
@@ -96,7 +96,7 @@ func TestNonameFlag(t *testing.T) {
 	cmd.IntVar(&n[3], "w", "w", -1, true, "timeout")
 	cmd.IntVar(&n[4], "r", "r", -1, true, "count")
 	cmd.IntVar(&n[5], "k", "k", -1, true, "host-list")
-	cmd.AnotherName("k2", "k")
+	cmd.Alias("k2", "k")
 	cmd.Parse(argv[1:])
 
 	for i, v := range s {
