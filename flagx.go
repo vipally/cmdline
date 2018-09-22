@@ -424,10 +424,17 @@ func (f *FlagSet) handleError(err error) (bool, error) {
 
 //check if there is a required flag and do not set it
 func (f *FlagSet) checkRequiredFlag() error {
-	for name, flg := range f.formal {
+	for _, flg := range f.formal {
 		if flg.Required {
-			if _, ok := f.actual[name]; !ok {
-				return f.failf("[error] require but lack of flag %s<%s>", flg.GetShowName(), flg.LogicName)
+			hasSet := false
+			for _, synon := range flg.Synonyms {
+				if _, ok := f.actual[synon]; ok {
+					hasSet = true
+					break
+				}
+			}
+			if !hasSet {
+				return f.failf("require but lack of flag %s<%s>", flg.GetShowName(), flg.LogicName)
 			}
 		}
 	}
@@ -660,8 +667,8 @@ func (f *FlagSet) Parse(arguments []string) error {
 		}
 	}
 	if err := f.checkRequiredFlag(); err != nil {
-		if ok, err_r := f.handleError(err); ok {
-			return err_r
+		if ok, err := f.handleError(err); ok {
+			return err
 		}
 	}
 	return nil
