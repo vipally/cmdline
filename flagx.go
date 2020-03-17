@@ -316,14 +316,6 @@ func Var(value Value, name string, logic_name string, required bool, usage strin
 	CommandLine.Var(value, name, logic_name, required, usage)
 }
 
-func isFlagLeadByte(c byte) bool {
-	return c == '-' || c == '/'
-}
-
-func isFlagLead(s string) bool {
-	return s == "-" || s == "--" || s == "/"
-}
-
 func isHelpFlag(s string) bool {
 	return s == "help" || s == "h" || s == "?"
 }
