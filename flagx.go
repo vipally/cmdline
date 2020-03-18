@@ -434,7 +434,7 @@ func (f *FlagSet) checkRequiredFlag() error {
 				}
 			}
 			if !hasSet {
-				return f.failf("require but lack of flag %s<%s>", flg.GetShowName(), flg.LogicName)
+				return f.failf("require but missing flag %s<%s>", flg.GetShowName(), flg.LogicName)
 			}
 		}
 	}
