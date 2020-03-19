@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -17,6 +18,8 @@ import (
 const (
 	gNoNamePrefix = "{noname#"
 )
+
+var expTag = regexp.MustCompile("<([A-Za-z][a-zA-Z0-9_]*)>")
 
 // GetShowName return name that will show in usage page. with "-f|flag=" format
 //
@@ -505,13 +508,25 @@ func ReplaceTags(s string) string {
 }
 
 func (f *FlagSet) ReplaceTags(s string) string {
-	s = strings.Replace(s, "<thiscmd>", thisCmd, -1)
-	s = strings.Replace(s, "<appname>", f.GetAppName(), -1)
-	s = strings.Replace(s, "<versiontime>", f.GetVersionTime(), -1)
-	s = strings.Replace(s, "<versiontag>", f.GetVersionTag(), -1)
-	s = strings.Replace(s, "<version>", f.GetVersion(), -1)
-	s = strings.Replace(s, "<validity>", f.GetValidity(), -1)
-	return s
+	return expTag.ReplaceAllStringFunc(s, f.fnReplaceTag)
+}
+
+func (f *FlagSet) fnReplaceTag(src string) string {
+	switch src {
+	case "<thiscmd>":
+		return thisCmd
+	case "<appname>":
+		return f.GetAppName()
+	case "<versiontime>":
+		return f.GetVersionTime()
+	case "<versiontag>":
+		return f.GetVersionTag()
+	case "<version>":
+		return f.GetVersion()
+	case "<validity>":
+		return f.GetValidity()
+	}
+	return src
 }
 
 func (f *FlagSet) AppName(appName string) (old string) {
