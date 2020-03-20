@@ -681,7 +681,7 @@ func (f *FlagSet) Parse(arguments []string) error {
 	return nil
 }
 
-//disable usage
+//disable usage   DisableUsage
 func (f *FlagSet) DisableUsage(enable bool) bool {
 	old := f.disableUsage
 	f.disableUsage = enable

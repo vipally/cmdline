@@ -846,17 +846,16 @@ func Var(value Value, name string, usage string) {
 // returns the error.
 func (f *FlagSet) failf(format string, a ...interface{}) error {
 	err := fmt.Errorf(format, a...)
-	fmt.Fprintln(f.Output(), err)
-	f.usage()
+	if !f.disableUsage {
+		fmt.Fprintln(f.Output(), err)
+		f.usage()
+	}
 	return err
 }
 
 // usage calls the Usage method for the flag set if one is specified,
 // or the appropriate default usage function otherwise.
 func (f *FlagSet) usage() {
-	if f.disableUsage {
-		return
-	}
 	if f.Usage == nil {
 		f.defaultUsage()
 	} else {
