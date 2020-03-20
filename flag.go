@@ -286,15 +286,16 @@ type FlagSet struct {
 	errorHandling ErrorHandling
 	output        io.Writer // nil means stderr; use out() accessor
 
-	summary     string //summary of this application
-	copyright   string //copyright of this application
-	details     string //detail use of this application
-	autoId      int    //no-name flag uses autoId++ as auto-name suffix
-	appName     string //name of app
-	version     string //version
-	versionTime string //version time
-	versionTag  string //version tag
-	validity    string //validity period
+	summary      string //summary of this application
+	copyright    string //copyright of this application
+	details      string //detail use of this application
+	autoId       int    //no-name flag uses autoId++ as auto-name suffix
+	appName      string //name of app
+	version      string //version
+	versionTime  string //version time
+	versionTag   string //version tag
+	validity     string //validity period
+	disableUsage bool
 }
 
 // A Flag represents the state of a flag.
@@ -853,6 +854,9 @@ func (f *FlagSet) failf(format string, a ...interface{}) error {
 // usage calls the Usage method for the flag set if one is specified,
 // or the appropriate default usage function otherwise.
 func (f *FlagSet) usage() {
+	if f.disableUsage {
+		return
+	}
 	if f.Usage == nil {
 		f.defaultUsage()
 	} else {
