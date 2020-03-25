@@ -26,10 +26,14 @@ func SplitLine(s string) []string {
 	na := 0
 	inString := 0
 	escape := 0
+	lastQuot := byte(0)
 	for i := 0; i+lenSep <= len(s) && na+1 < n; i++ {
-		if s[i] == '\'' || s[i] == '"' { //" xxxx yyyy " case, do not include \"
+		// consider " xxx 'yyy' zzz" as a single string
+		// " xxxx yyyy " case, do not include \"
+		if (s[i] == '\'' || s[i] == '"') && (inString%2 == 0 || lastQuot == s[i]) {
 			inString++
 			escape = 1
+			lastQuot = s[i]
 		} else {
 			if !isSpace(s[i]) {
 				escape = 0
