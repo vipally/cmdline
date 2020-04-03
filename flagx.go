@@ -20,6 +20,7 @@ const (
 )
 
 var expTag = regexp.MustCompile("<([A-Za-z][a-zA-Z0-9_]*)>")
+var expSpace = regexp.MustCompile(`^.*\s.*$`)
 
 // GetShowName return name that will show in usage page. with "-f|flag=" format
 //
@@ -686,4 +687,28 @@ func (f *FlagSet) DisableUsage(enable bool) bool {
 	old := f.disableUsage
 	f.disableUsage = enable
 	return old
+}
+
+//"--help" "show hello" are single string parameters, but not flags
+func detectString(s string) (string, bool) {
+	if len(s) == 0 {
+		return s, false
+	}
+	isString := false
+	ret := s
+	if c := ret[0]; c == '\'' || c == '"' {
+		ret = ret[1:]
+		isString = true
+	}
+	if l := len(ret); l > 0 {
+		if c := ret[l-1]; c == '\'' || c == '"' {
+			ret = ret[:l-1]
+			isString = true
+		}
+	}
+	if expSpace.MatchString(ret) {
+		isString = true
+	}
+
+	return ret, isString
 }

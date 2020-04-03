@@ -3,14 +3,14 @@
 // Blog    : http://blog.csdn.net/vipally
 // Site    : https://github.com/vipally
 
-package cmdline
+package cmdline_test
 
 /*    //comment this line to open the case
 import (
-	"flag"
+	//"flag"
 	"testing"
 
-	//"github.com/vipally/cmdline"
+	flag "github.com/vipally/cmdline"
 )
 
 //basic requirement test case

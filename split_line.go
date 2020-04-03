@@ -32,7 +32,7 @@ func SplitLine(s string) []string {
 		// " xxxx yyyy " case, do not include \"
 		if (s[i] == '\'' || s[i] == '"') && (inString%2 == 0 || lastQuot == s[i]) {
 			inString++
-			escape = 1
+			escape = 0
 			lastQuot = s[i]
 		} else {
 			if !isSpace(s[i]) {

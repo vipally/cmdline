@@ -88,11 +88,11 @@ Validity    : <validity>
 func TestNonameFlag(t *testing.T) {
 
 	var (
-		line = ` ping	 /l=2 127.0.0.1 --n	 1   ip2  -i=3 ip3 -r=	 5 -w =4 /k = 666 -k2 = 6`
+		line = ` ping	 /l=2 "=127.0.0.1" --n	 1   "is ip2"  -i=3 "--ip3" -r=	 5 -w =4 /k == == == == = =666 -k2 = 6 --ip4 == "-- = ip4"`
 
-		s       = []string{"", "", ""}
+		s       = []string{"", "", "", ""}
 		n       = []int{0, 0, 0, 0, 0, 0}
-		s_check = []string{"127.0.0.1", "ip2", "ip3"}
+		s_check = []string{"=127.0.0.1", "is ip2", "--ip3", "-- = ip4"}
 		n_check = []int{1, 2, 3, 4, 5, 6}
 	)
 
@@ -101,6 +101,7 @@ func TestNonameFlag(t *testing.T) {
 	cmd.StringVar(&s[0], "", "ip", "", true, "ip")
 	cmd.StringVar(&s[1], "", "ip2", "", true, "ip2")
 	cmd.StringVar(&s[2], "", "ip3", "", true, "ip3")
+	cmd.StringVar(&s[3], "ip4", "ip3", "", true, "ip4")
 	cmd.IntVar(&n[0], "n", "n", -1, true, "count")
 	cmd.IntVar(&n[1], "l", "l", -1, true, "size")
 	cmd.IntVar(&n[2], "i", "i", -1, true, "TTL")

@@ -868,14 +868,15 @@ func (f *FlagSet) parseOne() (bool, error) {
 	if len(f.args) == 0 {
 		return false, nil
 	}
-	s := f.args[0]
+	ss := f.args[0]
+	s, isString := detectString(ss) // avoid parse "--help" "show hello" as flags
 	if s == "" || isFlagLead(s) {
 		f.args = f.args[1:]
 		return false, nil
 	}
 
 	name, value := "", ""
-	if isFlagLeadByte(s[0]) {
+	if !isString && isFlagLeadByte(s[0]) {
 		numMinuses := 1
 		if len(s) > 1 && s[0] == '-' && s[1] == '-' {
 			numMinuses++
@@ -911,6 +912,7 @@ func (f *FlagSet) parseOne() (bool, error) {
 		return false, f.failf("flag provided but not defined: -%s", name)
 	}
 
+	// how to fix "--boolFlag = false" ?
 	if fv, ok := flag.Value.(boolFlag); ok && fv.IsBoolFlag() { // special case: doesn't need an arg
 		if value != "" {
 			if err := fv.Set(value); err != nil {
@@ -923,9 +925,12 @@ func (f *FlagSet) parseOne() (bool, error) {
 		}
 	} else {
 		// It must have a value, which might be the next argument.
-		for len(f.args) > 0 && (value == "" || value == "=") { //consider "-f = x" or "-f= x" or "-f =x" cases
-			value, f.args = f.args[0], f.args[1:]
-			if value[0] == '=' {
+		tmp := ""
+		isString := false
+		for len(f.args) > 0 && (value == "" || value == "=") { //consider "-f = x" or "-f= x" or "-f =x" or "-f x" or `-f "xx yy"`cases
+			tmp, f.args = f.args[0], f.args[1:]
+			value, isString = detectString(tmp)
+			if !isString && value[0] == '=' {
 				value = value[1:]
 			}
 		}
