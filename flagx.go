@@ -689,24 +689,21 @@ func (f *FlagSet) DisableUsage(enable bool) bool {
 	return old
 }
 
-//"--help" "show hello" are single string parameters, but not flags
+//"--help" "show hello" --flag="hello world" are single string parameters, but not flags
 func detectString(s string) (string, bool) {
 	if len(s) == 0 {
 		return s, false
 	}
 	isString := false
 	ret := s
-	if c := ret[0]; c == '\'' || c == '"' {
-		ret = ret[1:]
-		isString = true
-	}
-	if l := len(ret); l > 0 {
-		if c := ret[l-1]; c == '\'' || c == '"' {
-			ret = ret[:l-1]
+	//consider --flag="hello world"
+	if l := len(ret); l >= 2 {
+		if c, cl := ret[0], ret[l-1]; cl == c && (c == '\'' || c == '"') {
+			ret = ret[1 : l-1]
 			isString = true
 		}
 	}
-	if expSpace.MatchString(ret) {
+	if len(ret) > 0 && !isString && !isFlagLeadByte(ret[0]) && expSpace.MatchString(ret) {
 		isString = true
 	}
 
